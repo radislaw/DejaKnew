@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+
+# build output
+web/dist/
+api/server
+api/tmp/
+
+# env
+.env
+*.local
+
+# editor / os
+.DS_Store
+.idea/
+*.log
+
+# tooling state
+.omc/
+.claude/settings.local.json
