@@ -51,8 +51,19 @@ func (f *fakeUserRepo) FindByID(id string) (*domain.User, error) {
 func testRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	tokens := auth.NewTokenManager("test-secret")
-	svc := service.NewAuthService(newFakeUserRepo(), tokens)
-	return Router(tokens, NewAuthHandler(svc))
+	authSvc := service.NewAuthService(newFakeUserRepo(), tokens)
+	deckSvc := service.NewDeckService(newFakeDeckRepo())
+	return Router(tokens, NewAuthHandler(authSvc), NewDeckHandler(deckSvc))
+}
+
+func registerUser(t *testing.T, r http.Handler, email string) string {
+	t.Helper()
+	w := doJSON(t, r, "POST", "/api/v1/auth/register",
+		`{"email":"`+email+`","password":"password123"}`, "")
+	if w.Code != http.StatusCreated {
+		t.Fatalf("register %s failed: %d %s", email, w.Code, w.Body.String())
+	}
+	return tokenFrom(t, w)
 }
 
 func doJSON(t *testing.T, r http.Handler, method, path, body, token string) *httptest.ResponseRecorder {
