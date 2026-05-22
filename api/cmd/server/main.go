@@ -2,20 +2,32 @@ package main
 
 import (
 	"log"
-	"net/http"
 
+	"flashcards/api/internal/auth"
 	"flashcards/api/internal/config"
-
-	"github.com/gin-gonic/gin"
+	"flashcards/api/internal/handler"
+	"flashcards/api/internal/repository"
+	"flashcards/api/internal/service"
 )
 
 func main() {
 	cfg := config.Load()
 
-	r := gin.Default()
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"status": "ok"})
-	})
+	db, err := repository.Connect(cfg.DatabaseURL)
+	if err != nil {
+		log.Fatalf("database: %v", err)
+	}
+	if err := repository.Migrate(db); err != nil {
+		log.Fatalf("migration: %v", err)
+	}
+
+	tokens := auth.NewTokenManager(cfg.JWTSecret)
+
+	userRepo := repository.NewUserRepo(db)
+	authService := service.NewAuthService(userRepo, tokens)
+	authHandler := handler.NewAuthHandler(authService)
+
+	r := handler.Router(tokens, authHandler)
 
 	addr := ":" + cfg.Port
 	log.Printf("listening on %s", addr)

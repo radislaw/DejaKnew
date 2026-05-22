@@ -6,12 +6,14 @@ import "os"
 type Config struct {
 	Port        string
 	DatabaseURL string
+	JWTSecret   string
 }
 
 func Load() Config {
 	return Config{
 		Port:        env("PORT", "8080"),
 		DatabaseURL: env("DATABASE_URL", "postgres://flashcards:flashcards@localhost:5432/flashcards?sslmode=disable"),
+		JWTSecret:   env("JWT_SECRET", "dev-secret-change-me"),
 	}
 }
 

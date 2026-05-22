@@ -1,26 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import { calculateNextReview, getCardStatus } from './srs'
+import { getCardStatus, type SrsState } from './srs'
 
-describe('calculateNextReview', () => {
-  it('first successful review sets interval to 1 day', () => {
-    const s = calculateNextReview(undefined, 2)
-    expect(s.reps).toBe(1)
-    expect(s.interval).toBe(1)
-  })
-
-  it('quality 0 resets reps and counts a lapse', () => {
-    const prev = calculateNextReview(undefined, 2)
-    const s = calculateNextReview(prev, 0)
-    expect(s.reps).toBe(0)
-    expect(s.lapses).toBe(1)
-    expect(s.interval).toBe(0)
-  })
-
-  it('ease never drops below 1.3', () => {
-    let s = calculateNextReview(undefined, 0)
-    for (let i = 0; i < 20; i++) s = calculateNextReview(s, 0)
-    expect(s.ease).toBeGreaterThanOrEqual(1.3)
-  })
+const srs = (over: Partial<SrsState> = {}): SrsState => ({
+  interval: 1,
+  ease: 2.5,
+  reps: 1,
+  lapses: 0,
+  nextReview: Date.now() + 86_400_000,
+  lastReview: Date.now(),
+  ...over,
 })
 
 describe('getCardStatus', () => {
@@ -28,8 +16,19 @@ describe('getCardStatus', () => {
     expect(getCardStatus(undefined)).toBe('new')
   })
 
+  it('returns "new" when reps is 0', () => {
+    expect(getCardStatus(srs({ reps: 0 }))).toBe('new')
+  })
+
   it('returns "due" when nextReview is in the past', () => {
-    const s = calculateNextReview(undefined, 2)
-    expect(getCardStatus({ ...s, nextReview: Date.now() - 1000 })).toBe('due')
+    expect(getCardStatus(srs({ nextReview: Date.now() - 1000 }))).toBe('due')
+  })
+
+  it('returns "difficult" after 2 or more lapses', () => {
+    expect(getCardStatus(srs({ lapses: 2 }))).toBe('difficult')
+  })
+
+  it('returns "learned" after 5 or more reps', () => {
+    expect(getCardStatus(srs({ reps: 5 }))).toBe('learned')
   })
 })

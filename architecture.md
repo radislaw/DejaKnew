@@ -158,9 +158,8 @@ media                                       -- загруженные карти
 ## REST API (`/api/v1`)
 
 ```
-POST   /auth/register          email + password -> tokens
-POST   /auth/login             -> access + refresh tokens
-POST   /auth/refresh           refresh -> новый access
+POST   /auth/register          email + password -> token
+POST   /auth/login             -> token
 GET    /me                     текущий юзер
 
 GET    /decks                  свои колоды
@@ -187,7 +186,7 @@ POST   /media                  multipart upload -> { key }
 GET    /shared/:slug           публичное чтение колоды (без auth)
 ```
 
-Auth: JWT access (короткоживущий, ~15 мин) + refresh-токен.
+Auth: JWT (~7 дней), один токен. Refresh-токены — v2.
 Middleware читает `Authorization: Bearer <token>`, кладёт user в контекст.
 Эндпоинт `/shared/:slug` — единственный публичный, без middleware.
 
