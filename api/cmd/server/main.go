@@ -36,7 +36,11 @@ func main() {
 
 	deckHandler := handler.NewDeckHandler(deckService, cardService)
 
-	r := handler.Router(tokens, authHandler, deckHandler, cardHandler)
+	studyProgressRepo := repository.NewStudyProgressRepo(db)
+	studyService := service.NewStudyService(studyProgressRepo, cardRepo, deckRepo)
+	studyHandler := handler.NewStudyHandler(studyService)
+
+	r := handler.Router(tokens, authHandler, deckHandler, cardHandler, studyHandler)
 
 	addr := ":" + cfg.Port
 	log.Printf("listening on %s", addr)

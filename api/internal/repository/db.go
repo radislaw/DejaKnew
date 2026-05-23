@@ -21,7 +21,7 @@ func Connect(dsn string) (*gorm.DB, error) {
 // Migrate applies the schema via GORM AutoMigrate.
 // New domain models must be registered here.
 func Migrate(db *gorm.DB) error {
-	if err := db.AutoMigrate(&domain.User{}, &domain.Deck{}, &domain.Card{}); err != nil {
+	if err := db.AutoMigrate(&domain.User{}, &domain.Deck{}, &domain.Card{}, &domain.StudyProgress{}, &domain.ReviewLog{}); err != nil {
 		return fmt.Errorf("auto-migrate: %w", err)
 	}
 	return nil

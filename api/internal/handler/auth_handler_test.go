@@ -56,7 +56,8 @@ func testRouter() *gin.Engine {
 	deckSvc := service.NewDeckService(deckRepo)
 	cardRepo := newFakeCardRepo()
 	cardSvc := service.NewCardService(cardRepo, deckRepo)
-	return Router(tokens, NewAuthHandler(authSvc), NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc))
+	studySvc := service.NewStudyService(newFakeStudyProgressRepo(), cardRepo, deckRepo)
+	return Router(tokens, NewAuthHandler(authSvc), NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc), NewStudyHandler(studySvc))
 }
 
 func decodeJSON(t *testing.T, w *httptest.ResponseRecorder, v any) {
