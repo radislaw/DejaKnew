@@ -85,10 +85,16 @@ async function onDelete(cardId: string) {
       >
         ← Back
       </button>
-      <div>
+      <div class="flex-1">
         <h1 class="text-xl font-semibold tracking-tight">{{ deckTitle }}</h1>
         <p v-if="deckDescription" class="text-sm text-slate-400 mt-0.5">{{ deckDescription }}</p>
       </div>
+      <button
+        class="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-emerald-500"
+        @click="router.push({ name: 'study', params: { id: deckId } })"
+      >
+        Study
+      </button>
     </header>
 
     <main class="mx-auto max-w-4xl">
