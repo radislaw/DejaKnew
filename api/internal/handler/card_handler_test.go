@@ -136,3 +136,106 @@ func TestDeleteCardReturns204(t *testing.T) {
 		t.Fatalf("expected 204, got %d: %s", w.Code, w.Body.String())
 	}
 }
+
+func TestExportDeckCSV(t *testing.T) {
+	r := testRouter()
+	token := registerUser(t, r, "exp-csv@b.com")
+
+	created := doJSON(t, r, "POST", "/api/v1/decks", `{"title":"Go"}`, token)
+	var deck struct{ ID string }
+	decodeJSON(t, created, &deck)
+
+	doJSON(t, r, "POST", "/api/v1/decks/"+deck.ID+"/cards",
+		`{"front":"Q","back":"A"}`, token)
+
+	w := doJSON(t, r, "GET", "/api/v1/decks/"+deck.ID+"/export?format=csv", "", token)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	if ct := w.Header().Get("Content-Type"); !strings.Contains(ct, "text/csv") {
+		t.Errorf("unexpected Content-Type: %s", ct)
+	}
+	body := w.Body.String()
+	if !strings.Contains(body, "front") || !strings.Contains(body, "Q") {
+		t.Errorf("CSV missing expected content: %s", body)
+	}
+}
+
+func TestExportDeckJSON(t *testing.T) {
+	r := testRouter()
+	token := registerUser(t, r, "exp-json@b.com")
+
+	created := doJSON(t, r, "POST", "/api/v1/decks", `{"title":"Go"}`, token)
+	var deck struct{ ID string }
+	decodeJSON(t, created, &deck)
+
+	doJSON(t, r, "POST", "/api/v1/decks/"+deck.ID+"/cards",
+		`{"front":"Q","back":"A"}`, token)
+
+	w := doJSON(t, r, "GET", "/api/v1/decks/"+deck.ID+"/export?format=json", "", token)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	if ct := w.Header().Get("Content-Type"); !strings.Contains(ct, "application/json") {
+		t.Errorf("unexpected Content-Type: %s", ct)
+	}
+	body := w.Body.String()
+	if !strings.Contains(body, `"name"`) || !strings.Contains(body, `"Q"`) {
+		t.Errorf("JSON missing expected content: %s", body)
+	}
+}
+
+func TestExportDeckAnkiCSV(t *testing.T) {
+	r := testRouter()
+	token := registerUser(t, r, "exp-anki@b.com")
+
+	created := doJSON(t, r, "POST", "/api/v1/decks", `{"title":"Go"}`, token)
+	var deck struct{ ID string }
+	decodeJSON(t, created, &deck)
+
+	doJSON(t, r, "POST", "/api/v1/decks/"+deck.ID+"/cards",
+		`{"front":"Question","back":"Answer"}`, token)
+
+	w := doJSON(t, r, "GET", "/api/v1/decks/"+deck.ID+"/export?format=anki-csv", "", token)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	body := w.Body.String()
+	if !strings.Contains(body, "Question\tAnswer") {
+		t.Errorf("Anki CSV missing tab-separated content: %s", body)
+	}
+}
+
+func TestExportDeckBadFormat(t *testing.T) {
+	r := testRouter()
+	token := registerUser(t, r, "exp-bad@b.com")
+
+	created := doJSON(t, r, "POST", "/api/v1/decks", `{"title":"Go"}`, token)
+	var deck struct{ ID string }
+	decodeJSON(t, created, &deck)
+
+	w := doJSON(t, r, "GET", "/api/v1/decks/"+deck.ID+"/export?format=xlsx", "", token)
+	if w.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", w.Code)
+	}
+}
+
+func TestExportAll(t *testing.T) {
+	r := testRouter()
+	token := registerUser(t, r, "exp-all@b.com")
+
+	d1 := doJSON(t, r, "POST", "/api/v1/decks", `{"title":"Deck1"}`, token)
+	var deck1 struct{ ID string }
+	decodeJSON(t, d1, &deck1)
+	doJSON(t, r, "POST", "/api/v1/decks/"+deck1.ID+"/cards",
+		`{"front":"F1","back":"B1"}`, token)
+
+	w := doJSON(t, r, "GET", "/api/v1/export?format=csv", "", token)
+	if w.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d: %s", w.Code, w.Body.String())
+	}
+	body := w.Body.String()
+	if !strings.Contains(body, "F1") {
+		t.Errorf("export missing card content: %s", body)
+	}
+}
