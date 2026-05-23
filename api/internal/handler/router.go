@@ -45,6 +45,7 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 			protected.DELETE("/decks/:id", deckHandler.Delete)
 
 			protected.POST("/decks/:id/cards", cardHandler.Create)
+				protected.POST("/decks/:id/import", cardHandler.Import)
 			protected.PATCH("/cards/:id", cardHandler.Update)
 			protected.DELETE("/cards/:id", cardHandler.Delete)
 

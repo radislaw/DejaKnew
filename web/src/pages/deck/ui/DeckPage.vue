@@ -3,7 +3,9 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getDeck } from '@/entities/deck'
 import { useCardStore } from '@/entities/card'
+import type { Card } from '@/entities/card'
 import { CardCreateForm } from '@/features/card-create'
+import { CardImportForm } from '@/features/card-import'
 
 const route = useRoute()
 const router = useRouter()
@@ -16,6 +18,7 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 
 const showForm = ref(false)
+const showImport = ref(false)
 const createError = ref<string | null>(null)
 
 const editingId = ref<string | null>(null)
@@ -67,6 +70,11 @@ async function saveEdit(cardId: string) {
   }
 }
 
+function onImported(cards: Card[]) {
+  cardStore.setCards([...cardStore.cards, ...cards])
+  showImport.value = false
+}
+
 async function onDelete(cardId: string) {
   try {
     await cardStore.removeCard(cardId)
@@ -106,13 +114,20 @@ async function onDelete(cardId: string) {
           <h2 class="text-lg font-medium">
             Cards <span class="text-slate-500 text-sm font-normal">({{ cardStore.cards.length }})</span>
           </h2>
-          <button
-            v-if="!showForm"
-            class="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-500"
-            @click="showForm = true"
-          >
-            + Add card
-          </button>
+          <div v-if="!showForm && !showImport" class="flex gap-2">
+            <button
+              class="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-500"
+              @click="showForm = true"
+            >
+              + Add card
+            </button>
+            <button
+              class="rounded-lg border border-slate-600 px-4 py-1.5 text-sm font-medium text-slate-300 hover:border-slate-500 hover:text-slate-100"
+              @click="showImport = true"
+            >
+              Import
+            </button>
+          </div>
         </div>
 
         <CardCreateForm
@@ -120,6 +135,14 @@ async function onDelete(cardId: string) {
           class="mb-4"
           @submit="onCreate"
           @cancel="showForm = false"
+        />
+
+        <CardImportForm
+          v-if="showImport"
+          :deck-id="deckId"
+          class="mb-4"
+          @imported="onImported"
+          @cancel="showImport = false"
         />
 
         <p v-if="createError" class="mb-3 text-sm text-red-400">{{ createError }}</p>

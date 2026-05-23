@@ -94,6 +94,37 @@ func (s *CardService) Delete(ownerID, cardID string) error {
 	return s.cards.Delete(cardID)
 }
 
+func (s *CardService) BulkCreate(ownerID, deckID string, inputs []CardInput) ([]domain.Card, error) {
+	deck, err := s.decks.FindByID(deckID)
+	if err != nil {
+		return nil, err
+	}
+	if deck.OwnerID != ownerID {
+		return nil, domain.ErrForbidden
+	}
+	cards := make([]domain.Card, 0, len(inputs))
+	for _, in := range inputs {
+		card := &domain.Card{
+			ID:     uuid.NewString(),
+			DeckID: deckID,
+			Type:   "basic",
+			Content: domain.CardContent{
+				Front:     in.Front,
+				Back:      in.Back,
+				Topic:     in.Topic,
+				Level:     in.Level,
+				SourceURL: in.SourceURL,
+				Tags:      in.Tags,
+			},
+		}
+		if err := s.cards.Create(card); err != nil {
+			return nil, err
+		}
+		cards = append(cards, *card)
+	}
+	return cards, nil
+}
+
 // owned loads a card and verifies ownerID owns its parent deck.
 func (s *CardService) owned(ownerID, cardID string) (*domain.Card, error) {
 	card, err := s.cards.FindByID(cardID)

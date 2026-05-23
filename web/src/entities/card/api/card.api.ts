@@ -12,3 +12,19 @@ export function updateCard(id: string, input: CreateCardInput): Promise<Card> {
 export function deleteCard(id: string): Promise<void> {
   return apiRequest<void>(`/cards/${id}`, { method: 'DELETE' })
 }
+
+export interface ImportResult {
+  imported: number
+  cards: Card[]
+}
+
+export function importCards(
+  deckId: string,
+  format: 'json' | 'csv',
+  data: string,
+): Promise<ImportResult> {
+  return apiRequest<ImportResult>(`/decks/${deckId}/import`, {
+    method: 'POST',
+    body: { format, data },
+  })
+}
