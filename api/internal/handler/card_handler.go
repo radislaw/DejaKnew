@@ -234,3 +234,161 @@ func cardErrorStatus(err error) (int, bool) {
 		return http.StatusInternalServerError, true
 	}
 }
+
+func (h *CardHandler) ExportDeck(c *gin.Context) {
+	format := c.Query("format")
+	contentType, ext, err := exportMeta(format)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	de, err := h.cards.ExportDeck(c.GetString(middleware.ContextUserID), c.Param("id"))
+	if status, failed := cardErrorStatus(err); failed {
+		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	data, err := renderExport(format, []service.DeckExport{*de})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	filename := "flashcards-" + de.Deck.Title + "." + ext
+	c.Header("Content-Disposition", "attachment; filename="+filename)
+	c.Data(http.StatusOK, contentType, data)
+}
+
+func (h *CardHandler) ExportAll(c *gin.Context) {
+	format := c.Query("format")
+	contentType, ext, err := exportMeta(format)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	decks, err := h.cards.ExportAll(c.GetString(middleware.ContextUserID))
+	if status, failed := cardErrorStatus(err); failed {
+		c.JSON(status, gin.H{"error": err.Error()})
+		return
+	}
+
+	data, err := renderExport(format, decks)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=flashcards-export."+ext)
+	c.Data(http.StatusOK, contentType, data)
+}
+
+// exportMeta returns content-type and file extension for a given format.
+func exportMeta(format string) (contentType, ext string, err error) {
+	switch format {
+	case "csv":
+		return "text/csv", "csv", nil
+	case "json":
+		return "application/json", "json", nil
+	case "anki-csv":
+		return "text/plain", "txt", nil
+	default:
+		return "", "", errors.New("unsupported format: use csv, json, or anki-csv")
+	}
+}
+
+// renderExport serializes DeckExport slices to bytes in the requested format.
+func renderExport(format string, decks []service.DeckExport) ([]byte, error) {
+	switch format {
+	case "csv":
+		return renderCSVExport(decks)
+	case "json":
+		return renderJSONExport(decks)
+	case "anki-csv":
+		return renderAnkiCSVExport(decks)
+	default:
+		return nil, errors.New("unsupported format")
+	}
+}
+
+func renderCSVExport(decks []service.DeckExport) ([]byte, error) {
+	var buf strings.Builder
+	w := csv.NewWriter(&buf)
+	_ = w.Write([]string{"deck_name", "front", "back", "topic", "level", "source_url", "tags"})
+	for _, de := range decks {
+		for _, c := range de.Cards {
+			row := []string{
+				de.Deck.Title,
+				c.Content.Front,
+				c.Content.Back,
+				derefStr(c.Content.Topic),
+				derefStr(c.Content.Level),
+				derefStr(c.Content.SourceURL),
+				strings.Join(c.Content.Tags, "|"),
+			}
+			_ = w.Write(row)
+		}
+	}
+	w.Flush()
+	return []byte(buf.String()), w.Error()
+}
+
+func renderJSONExport(decks []service.DeckExport) ([]byte, error) {
+	type cardRow struct {
+		Front     string   `json:"front"`
+		Back      string   `json:"back"`
+		Topic     *string  `json:"topic,omitempty"`
+		Level     *string  `json:"level,omitempty"`
+		SourceURL *string  `json:"sourceUrl,omitempty"`
+		Tags      []string `json:"tags"`
+	}
+	type deckRow struct {
+		Name        string    `json:"name"`
+		Description string    `json:"description"`
+		Cards       []cardRow `json:"cards"`
+	}
+	rows := make([]deckRow, 0, len(decks))
+	for _, de := range decks {
+		cards := make([]cardRow, 0, len(de.Cards))
+		for _, c := range de.Cards {
+			cards = append(cards, cardRow{
+				Front:     c.Content.Front,
+				Back:      c.Content.Back,
+				Topic:     c.Content.Topic,
+				Level:     c.Content.Level,
+				SourceURL: c.Content.SourceURL,
+				Tags:      c.Content.Tags,
+			})
+		}
+		rows = append(rows, deckRow{
+			Name:        de.Deck.Title,
+			Description: de.Deck.Description,
+			Cards:       cards,
+		})
+	}
+	return json.MarshalIndent(rows, "", "  ")
+}
+
+func renderAnkiCSVExport(decks []service.DeckExport) ([]byte, error) {
+	// Anki tab-separated: front TAB back TAB tags (space-separated), no header.
+	var buf strings.Builder
+	for _, de := range decks {
+		for _, c := range de.Cards {
+			buf.WriteString(c.Content.Front)
+			buf.WriteByte('\t')
+			buf.WriteString(c.Content.Back)
+			buf.WriteByte('\t')
+			buf.WriteString(strings.Join(c.Content.Tags, " "))
+			buf.WriteByte('\n')
+		}
+	}
+	return []byte(buf.String()), nil
+}
+
+func derefStr(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
+}

@@ -19,7 +19,7 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		ExposeHeaders:    []string{"Content-Length"},
+		ExposeHeaders:    []string{"Content-Length", "Content-Disposition"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
 	}))
@@ -46,6 +46,8 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 
 			protected.POST("/decks/:id/cards", cardHandler.Create)
 				protected.POST("/decks/:id/import", cardHandler.Import)
+				protected.GET("/decks/:id/export", cardHandler.ExportDeck)
+				protected.GET("/export", cardHandler.ExportAll)
 			protected.PATCH("/cards/:id", cardHandler.Update)
 			protected.DELETE("/cards/:id", cardHandler.Delete)
 
