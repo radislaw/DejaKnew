@@ -1,1 +1,1 @@
-export { apiRequest, setAuthToken, ApiError } from './client'
+export { apiRequest, apiBlobRequest, setAuthToken, ApiError } from './client'
