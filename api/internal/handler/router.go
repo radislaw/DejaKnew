@@ -12,7 +12,7 @@ import (
 )
 
 // Router wires all routes. New resource handlers are registered here.
-func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *DeckHandler) *gin.Engine {
+func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
@@ -43,6 +43,10 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 			protected.GET("/decks/:id", deckHandler.Get)
 			protected.PATCH("/decks/:id", deckHandler.Update)
 			protected.DELETE("/decks/:id", deckHandler.Delete)
+
+			protected.POST("/decks/:id/cards", cardHandler.Create)
+			protected.PATCH("/cards/:id", cardHandler.Update)
+			protected.DELETE("/cards/:id", cardHandler.Delete)
 		}
 	}
 

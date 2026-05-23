@@ -11,12 +11,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type DeckHandler struct {
-	decks *service.DeckService
+// cardLister is the minimal card dependency for loading a deck's cards.
+type cardLister interface {
+	ListByDeck(deckID string) ([]domain.Card, error)
 }
 
-func NewDeckHandler(decks *service.DeckService) *DeckHandler {
-	return &DeckHandler{decks: decks}
+type DeckHandler struct {
+	decks *service.DeckService
+	cards cardLister
+}
+
+func NewDeckHandler(decks *service.DeckService, cards cardLister) *DeckHandler {
+	return &DeckHandler{decks: decks, cards: cards}
+}
+
+type deckDetail struct {
+	*domain.Deck
+	Cards []domain.Card `json:"cards"`
 }
 
 type deckBody struct {
@@ -64,7 +75,15 @@ func (h *DeckHandler) Get(c *gin.Context) {
 		c.JSON(status, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, deck)
+	cards, err := h.cards.ListByDeck(deck.ID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load cards"})
+		return
+	}
+	if cards == nil {
+		cards = []domain.Card{}
+	}
+	c.JSON(http.StatusOK, deckDetail{Deck: deck, Cards: cards})
 }
 
 func (h *DeckHandler) Update(c *gin.Context) {

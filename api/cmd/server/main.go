@@ -29,9 +29,14 @@ func main() {
 
 	deckRepo := repository.NewDeckRepo(db)
 	deckService := service.NewDeckService(deckRepo)
-	deckHandler := handler.NewDeckHandler(deckService)
 
-	r := handler.Router(tokens, authHandler, deckHandler)
+	cardRepo := repository.NewCardRepo(db)
+	cardService := service.NewCardService(cardRepo, deckRepo)
+	cardHandler := handler.NewCardHandler(cardService)
+
+	deckHandler := handler.NewDeckHandler(deckService, cardService)
+
+	r := handler.Router(tokens, authHandler, deckHandler, cardHandler)
 
 	addr := ":" + cfg.Port
 	log.Printf("listening on %s", addr)

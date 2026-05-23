@@ -52,8 +52,18 @@ func testRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	tokens := auth.NewTokenManager("test-secret")
 	authSvc := service.NewAuthService(newFakeUserRepo(), tokens)
-	deckSvc := service.NewDeckService(newFakeDeckRepo())
-	return Router(tokens, NewAuthHandler(authSvc), NewDeckHandler(deckSvc))
+	deckRepo := newFakeDeckRepo()
+	deckSvc := service.NewDeckService(deckRepo)
+	cardRepo := newFakeCardRepo()
+	cardSvc := service.NewCardService(cardRepo, deckRepo)
+	return Router(tokens, NewAuthHandler(authSvc), NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc))
+}
+
+func decodeJSON(t *testing.T, w *httptest.ResponseRecorder, v any) {
+	t.Helper()
+	if err := json.Unmarshal(w.Body.Bytes(), v); err != nil {
+		t.Fatalf("decode JSON: %v", err)
+	}
 }
 
 func registerUser(t *testing.T, r http.Handler, email string) string {
