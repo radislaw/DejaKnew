@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router'
 import type { Deck } from '@/entities/deck'
 
 defineProps<{ decks: Deck[] }>()
@@ -13,7 +14,12 @@ const emit = defineEmits<{ delete: [id: string] }>()
       class="group flex flex-col gap-2 rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-slate-500"
     >
       <div class="flex items-start justify-between gap-2">
-        <span class="text-sm font-medium text-slate-100 leading-snug">{{ deck.title }}</span>
+        <RouterLink
+          :to="{ name: 'deck', params: { id: deck.id } }"
+          class="text-sm font-medium text-slate-100 leading-snug hover:text-sky-400 transition"
+        >
+          {{ deck.title }}
+        </RouterLink>
         <button
           class="shrink-0 text-slate-600 opacity-0 transition hover:text-red-400 group-hover:opacity-100"
           title="Delete deck"
