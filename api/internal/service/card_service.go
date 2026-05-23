@@ -18,6 +18,13 @@ type CardRepository interface {
 // deckOwnerChecker is the minimal deck dependency needed to verify ownership.
 type deckOwnerChecker interface {
 	FindByID(id string) (*domain.Deck, error)
+	ListByOwner(ownerID string) ([]domain.Deck, error)
+}
+
+// DeckExport bundles a deck with its cards for serialization.
+type DeckExport struct {
+	Deck  domain.Deck
+	Cards []domain.Card
 }
 
 type CardService struct {
@@ -139,4 +146,37 @@ func (s *CardService) owned(ownerID, cardID string) (*domain.Card, error) {
 		return nil, domain.ErrForbidden
 	}
 	return card, nil
+}
+
+// ExportDeck returns all cards in one deck after verifying ownership.
+func (s *CardService) ExportDeck(ownerID, deckID string) (*DeckExport, error) {
+	deck, err := s.decks.FindByID(deckID)
+	if err != nil {
+		return nil, err
+	}
+	if deck.OwnerID != ownerID {
+		return nil, domain.ErrForbidden
+	}
+	cards, err := s.cards.ListByDeck(deckID)
+	if err != nil {
+		return nil, err
+	}
+	return &DeckExport{Deck: *deck, Cards: cards}, nil
+}
+
+// ExportAll returns all decks and their cards for a user.
+func (s *CardService) ExportAll(ownerID string) ([]DeckExport, error) {
+	decks, err := s.decks.ListByOwner(ownerID)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]DeckExport, 0, len(decks))
+	for _, deck := range decks {
+		cards, err := s.cards.ListByDeck(deck.ID)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, DeckExport{Deck: deck, Cards: cards})
+	}
+	return out, nil
 }
