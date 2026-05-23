@@ -1,7 +1,7 @@
 # FlashCards — Product Spec
 
-Версия: 0.3 (draft, на подтверждении)
-Дата: 2026-05-22
+Версия: 0.4 (draft, на подтверждении)
+Дата: 2026-05-23
 
 ## Одно предложение
 
@@ -37,6 +37,7 @@ repetition, с аккаунтами и синхронизацией прогре
 - [ ] PWA: установка, offline-изучение уже загруженных колод
 - [ ] Шаринг колоды по ссылке (read-only, без авторизации у получателя)
 - [ ] Внутренний REST API (для собственного фронта)
+- [ ] i18n: поддержка ru/en через vue-i18n; язык из настроек пользователя (fallback: `Accept-Language`); все UI-строки в локальных файлах, без хардкода
 
 ## Reference implementation (шаг 5 плейбука)
 
@@ -65,6 +66,29 @@ JWT-middleware; frontend page → entity → shared/api, router guard, Pinia.
 - НЕТ: коллаборация (несколько авторов одной колоды)
 - НЕТ: AI-генерация карточек
 - НЕТ: восстановление пароля по email → v2 (требует email-сервиса)
+
+## Безопасность и защита инфраструктуры
+
+### Защита от ботов
+
+- Регистрация и login: hCaptcha (self-hosted) или Cloudflare Turnstile —
+  невидимый challenge, без tracking-зависимости от Google
+- Верификация токена captcha — на бэкенде (Go), до создания пользователя
+  или выдачи JWT
+- Брутфорс: rate limit по IP — 5 неудачных попыток за 15 минут → lockout
+  (429, retry-after header)
+
+### Защита от DDoS
+
+- Уровень инфраструктуры: Cloudflare (free tier достаточно для v1) —
+  anycast, L3/L4 фильтрация, автоматический challenge при аномалии
+- Уровень приложения (Go): rate limiting через middleware (token bucket,
+  `golang.org/x/time/rate`); лимиты по IP и по user-id
+  - Публичные эндпоинты (шаринг колоды): 60 req/min per IP
+  - Auth эндпоинты: 10 req/min per IP
+  - Авторизованные пользователи: 300 req/min per user
+- Тяжёлые операции (импорт, экспорт): очередь + размер payload ≤ 10 MB
+- Timeouts на всех HTTP-хендлерах: read 5s, write 30s, idle 120s
 
 ## Приватность
 

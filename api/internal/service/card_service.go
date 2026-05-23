@@ -31,8 +31,12 @@ func NewCardService(cards CardRepository, decks deckOwnerChecker) *CardService {
 
 // CardInput carries the editable fields of a Basic card.
 type CardInput struct {
-	Front string
-	Back  string
+	Front     string
+	Back      string
+	Topic     *string
+	Level     *string
+	SourceURL *string
+	Tags      []string
 }
 
 func (s *CardService) Create(ownerID, deckID string, in CardInput) (*domain.Card, error) {
@@ -48,8 +52,12 @@ func (s *CardService) Create(ownerID, deckID string, in CardInput) (*domain.Card
 		DeckID: deckID,
 		Type:   "basic",
 		Content: domain.CardContent{
-			Front: in.Front,
-			Back:  in.Back,
+			Front:     in.Front,
+			Back:      in.Back,
+			Topic:     in.Topic,
+			Level:     in.Level,
+			SourceURL: in.SourceURL,
+			Tags:      in.Tags,
 		},
 	}
 	if err := s.cards.Create(card); err != nil {
@@ -69,6 +77,10 @@ func (s *CardService) Update(ownerID, cardID string, in CardInput) (*domain.Card
 	}
 	card.Content.Front = in.Front
 	card.Content.Back = in.Back
+	card.Content.Topic = in.Topic
+	card.Content.Level = in.Level
+	card.Content.SourceURL = in.SourceURL
+	card.Content.Tags = in.Tags
 	if err := s.cards.Update(card); err != nil {
 		return nil, err
 	}

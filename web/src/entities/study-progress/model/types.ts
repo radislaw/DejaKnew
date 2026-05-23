@@ -2,7 +2,7 @@
 export interface QueueCard {
   id: string
   deckId: string
-  content: { front: string; back: string; frontImage: string | null; backImage: string | null }
+  content: { front: string; back: string; frontImage: string | null; backImage: string | null; topic?: string; level?: string; sourceUrl?: string; tags?: string[] }
   position: number
 }
 

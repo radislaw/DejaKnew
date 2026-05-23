@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/features/auth'
 import { useDeckStore } from '@/entities/deck'
 import { DeckCreateForm } from '@/features/deck-create'
 import { DeckList } from '@/widgets/deck-list'
 
+const router = useRouter()
 const auth = useAuthStore()
 const decks = useDeckStore()
 const showForm = ref(false)
@@ -39,7 +41,7 @@ async function onDelete(id: string) {
         <span class="text-sm text-slate-400">{{ auth.user?.email }}</span>
         <button
           class="rounded-lg px-3 py-1.5 text-sm text-slate-400 hover:text-slate-200"
-          @click="auth.logout()"
+          @click="auth.logout(); router.push('/login')"
         >
           Sign out
         </button>

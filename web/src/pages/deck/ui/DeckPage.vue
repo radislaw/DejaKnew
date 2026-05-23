@@ -36,10 +36,10 @@ onMounted(async () => {
   }
 })
 
-async function onCreate(front: string, back: string) {
+async function onCreate(input: { front: string; back: string; topic?: string; level?: string; sourceUrl?: string; tags?: string[] }) {
   createError.value = null
   try {
-    await cardStore.addCard(deckId, { front, back })
+    await cardStore.addCard(deckId, input)
     showForm.value = false
   } catch (e) {
     createError.value = e instanceof Error ? e.message : 'Failed to add card'

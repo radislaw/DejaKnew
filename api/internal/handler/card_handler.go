@@ -20,12 +20,23 @@ func NewCardHandler(cards *service.CardService) *CardHandler {
 }
 
 type cardBody struct {
-	Front string `json:"front" binding:"required"`
-	Back  string `json:"back" binding:"required"`
+	Front     string   `json:"front" binding:"required"`
+	Back      string   `json:"back" binding:"required"`
+	Topic     *string  `json:"topic"`
+	Level     *string  `json:"level"`
+	SourceURL *string  `json:"sourceUrl"`
+	Tags      []string `json:"tags"`
 }
 
 func (b cardBody) toInput() service.CardInput {
-	return service.CardInput{Front: b.Front, Back: b.Back}
+	return service.CardInput{
+		Front:     b.Front,
+		Back:      b.Back,
+		Topic:     b.Topic,
+		Level:     b.Level,
+		SourceURL: b.SourceURL,
+		Tags:      b.Tags,
+	}
 }
 
 func (h *CardHandler) Create(c *gin.Context) {

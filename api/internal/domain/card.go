@@ -4,10 +4,14 @@ import "time"
 
 // CardContent holds the v1 Basic card fields stored as JSONB.
 type CardContent struct {
-	Front      string  `json:"front"`
-	Back       string  `json:"back"`
-	FrontImage *string `json:"frontImage"`
-	BackImage  *string `json:"backImage"`
+	Front      string   `json:"front"`
+	Back       string   `json:"back"`
+	FrontImage *string  `json:"frontImage"`
+	BackImage  *string  `json:"backImage"`
+	Topic      *string  `json:"topic,omitempty"`
+	Level      *string  `json:"level,omitempty"`
+	SourceURL  *string  `json:"sourceUrl,omitempty"`
+	Tags       []string `json:"tags,omitempty"`
 }
 
 // Card is a single flashcard belonging to a Deck.

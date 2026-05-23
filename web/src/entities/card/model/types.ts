@@ -3,6 +3,10 @@ export interface CardContent {
   back: string
   frontImage: string | null
   backImage: string | null
+  topic?: string
+  level?: string
+  sourceUrl?: string
+  tags?: string[]
 }
 
 export interface Card {
@@ -18,4 +22,8 @@ export interface Card {
 export interface CreateCardInput {
   front: string
   back: string
+  topic?: string
+  level?: string
+  sourceUrl?: string
+  tags?: string[]
 }
