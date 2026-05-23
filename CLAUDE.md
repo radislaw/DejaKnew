@@ -49,5 +49,19 @@ Layers, top to bottom: `app → pages → widgets → features → entities → 
 
 ## Canonical feature pattern
 
-After the reference implementation (spec.md, step 5) is built, a link to
-the canonical file goes here — copy its structure for new features.
+Reference implementation (step 5) is complete. Copy these files for new features:
+
+**Backend (Go):**
+- Domain model: `api/internal/domain/deck.go`
+- Repository (GORM): `api/internal/repository/deck_repo.go`
+- Service + interface: `api/internal/service/deck_service.go`
+- Handler (Gin): `api/internal/handler/deck_handler.go`
+- Route registration: `api/internal/handler/router.go`
+
+**Frontend (FSD):**
+- Entity type + API: `web/src/entities/deck/model/types.ts`, `web/src/entities/deck/api/deck.api.ts`
+- Pinia store: `web/src/entities/deck/model/deck.store.ts`
+- Public slice API: `web/src/entities/deck/index.ts`
+- Feature UI: `web/src/features/deck-create/ui/DeckCreateForm.vue`
+- Widget: `web/src/widgets/deck-list/ui/DeckList.vue`
+- Page: `web/src/pages/home/ui/HomePage.vue`
