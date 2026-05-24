@@ -5,6 +5,7 @@ import { useAuthStore } from '@/features/auth'
 import { useDeckStore } from '@/entities/deck'
 import { DeckCreateForm } from '@/features/deck-create'
 import { DeckList } from '@/widgets/deck-list'
+import { CardExportButton } from '@/features/card-export'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -51,13 +52,16 @@ async function onDelete(id: string) {
     <main class="mx-auto max-w-4xl">
       <div class="mb-4 flex items-center justify-between">
         <h2 class="text-lg font-medium">My decks</h2>
-        <button
-          v-if="!showForm"
-          class="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-500"
-          @click="showForm = true"
-        >
-          + New deck
-        </button>
+        <div class="flex gap-2">
+          <CardExportButton />
+          <button
+            v-if="!showForm"
+            class="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-500"
+            @click="showForm = true"
+          >
+            + New deck
+          </button>
+        </div>
       </div>
 
       <DeckCreateForm

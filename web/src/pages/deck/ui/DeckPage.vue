@@ -6,6 +6,7 @@ import { useCardStore } from '@/entities/card'
 import type { Card } from '@/entities/card'
 import { CardCreateForm } from '@/features/card-create'
 import { CardImportForm } from '@/features/card-import'
+import { CardExportButton } from '@/features/card-export'
 
 const route = useRoute()
 const router = useRouter()
@@ -127,6 +128,7 @@ async function onDelete(cardId: string) {
             >
               Import
             </button>
+            <CardExportButton :deck-id="deckId" />
           </div>
         </div>
 

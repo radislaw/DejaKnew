@@ -45,3 +45,26 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   }
   return data as T
 }
+
+export async function apiBlobRequest(path: string): Promise<{ blob: Blob; filename: string }> {
+  const headers: Record<string, string> = {}
+  if (authToken) headers.Authorization = `Bearer ${authToken}`
+
+  const response = await fetch(`${API_BASE_URL}${path}`, { headers })
+
+  if (!response.ok) {
+    const data = await response.json().catch(() => null)
+    const message =
+      data && typeof data.error === 'string'
+        ? data.error
+        : `Request failed (${response.status})`
+    throw new ApiError(response.status, message)
+  }
+
+  const contentDisposition = response.headers.get('Content-Disposition') ?? ''
+  const match = contentDisposition.match(/filename=(.+)/)
+  const filename = match ? match[1].trim() : 'export'
+
+  const blob = await response.blob()
+  return { blob, filename }
+}

@@ -1,4 +1,4 @@
-import { apiRequest } from '@/shared/api'
+import { apiRequest, apiBlobRequest } from '@/shared/api'
 import type { Card, CreateCardInput } from '../model/types'
 
 export function createCard(deckId: string, input: CreateCardInput): Promise<Card> {
@@ -27,4 +27,13 @@ export function importCards(
     method: 'POST',
     body: { format, data },
   })
+}
+
+export type ExportFormat = 'csv' | 'json' | 'anki-csv'
+
+export function exportCards(format: ExportFormat, deckId?: string): Promise<{ blob: Blob; filename: string }> {
+  const path = deckId
+    ? `/decks/${deckId}/export?format=${format}`
+    : `/export?format=${format}`
+  return apiBlobRequest(path)
 }

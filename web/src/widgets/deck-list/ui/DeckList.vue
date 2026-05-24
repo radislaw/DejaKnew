@@ -11,15 +11,17 @@ const emit = defineEmits<{ delete: [id: string] }>()
     <li
       v-for="deck in decks"
       :key="deck.id"
-      class="group flex flex-col gap-2 rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-slate-500"
+      class="group relative flex flex-col gap-2 rounded-xl border border-slate-700 bg-slate-800/60 p-4 transition hover:border-slate-500"
     >
-      <div class="flex items-start justify-between gap-2">
-        <RouterLink
-          :to="{ name: 'deck', params: { id: deck.id } }"
-          class="text-sm font-medium text-slate-100 leading-snug hover:text-sky-400 transition"
-        >
-          {{ deck.title }}
-        </RouterLink>
+      <!-- Stretched link covers the whole card; delete button sits above via z-10 -->
+      <RouterLink
+        :to="{ name: 'deck', params: { id: deck.id } }"
+        class="absolute inset-0 rounded-xl"
+        aria-hidden="true"
+      />
+
+      <div class="relative z-10 flex items-start justify-between gap-2">
+        <span class="text-sm font-medium text-slate-100 leading-snug">{{ deck.title }}</span>
         <button
           class="shrink-0 text-slate-600 opacity-0 transition hover:text-red-400 group-hover:opacity-100"
           title="Delete deck"
@@ -28,10 +30,11 @@ const emit = defineEmits<{ delete: [id: string] }>()
           ✕
         </button>
       </div>
-      <p v-if="deck.description" class="text-xs text-slate-400 line-clamp-2">
+
+      <p v-if="deck.description" class="relative z-10 text-xs text-slate-400 line-clamp-2">
         {{ deck.description }}
       </p>
-      <div v-if="deck.tags?.length" class="flex flex-wrap gap-1">
+      <div v-if="deck.tags?.length" class="relative z-10 flex flex-wrap gap-1">
         <span
           v-for="tag in deck.tags"
           :key="tag"
