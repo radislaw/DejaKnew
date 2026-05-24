@@ -18,6 +18,14 @@ Frontend (`web/`): `npm run dev` · `build` · `lint` · `typecheck` · `test`
 Backend (`api/`): `go run ./cmd/server` · `go test ./...` · `golangci-lint run`
 Local infra: `docker compose up` (postgres + minio)
 
+## GitHub
+
+Remote: `git@github.com:radislaw/DejaKnew.git` (SSH, private repo)
+
+```bash
+git push
+```
+
 ## Frontend — FSD
 
 Layers, top to bottom: `app → pages → widgets → features → entities → shared`.
