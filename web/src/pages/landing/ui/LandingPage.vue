@@ -146,7 +146,7 @@ onMounted(() => {
         function tick(now: number) {
           const t = Math.min((now - start) / dur, 1)
           const eased = 1 - Math.pow(1 - t, 3)
-          counterEl.textContent = fmt(Math.round(target * eased))
+          if (counterEl) counterEl.textContent = fmt(Math.round(target * eased))
           if (t < 1) requestAnimationFrame(tick)
         }
         requestAnimationFrame(tick)

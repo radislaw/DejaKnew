@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { HomePage } from '@/pages/home'
+import { RootPage } from '@/pages/root'
 import { LoginPage } from '@/pages/login'
 import { RegisterPage } from '@/pages/register'
 import { DeckPage } from '@/pages/deck'
@@ -15,7 +15,7 @@ declare module 'vue-router' {
 export const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', name: 'home', component: HomePage, meta: { requiresAuth: true } },
+    { path: '/', name: 'home', component: RootPage },
     { path: '/decks/:id', name: 'deck', component: DeckPage, meta: { requiresAuth: true } },
     { path: '/study/:id', name: 'study', component: StudyPage, meta: { requiresAuth: true } },
     { path: '/login', name: 'login', component: LoginPage },
@@ -26,7 +26,7 @@ export const router = createRouter({
 router.beforeEach((to) => {
   const auth = useAuthStore()
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    return { name: 'login' }
+    return { name: 'home' }
   }
   if ((to.name === 'login' || to.name === 'register') && auth.isAuthenticated) {
     return { name: 'home' }
