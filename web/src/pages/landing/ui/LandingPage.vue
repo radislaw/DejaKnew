@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { LocaleSwitcher } from '@/shared/ui'
 
 const router = useRouter()
+const { t } = useI18n()
 
 const memoLayerRef = ref<HTMLDivElement | null>(null)
 const demoCardRef = ref<HTMLDivElement | null>(null)
@@ -285,8 +288,9 @@ onUnmounted(() => {
           <span>DéjàKnew</span>
         </a>
         <div class="lp-nav-actions">
-          <button class="lp-btn lp-btn-ghost" @click="router.push('/login')">Войти</button>
-          <button class="lp-btn lp-btn-primary" @click="router.push('/register')">Начать →</button>
+          <LocaleSwitcher />
+          <button class="lp-btn lp-btn-ghost" @click="router.push('/login')">{{ t('landing.signIn') }}</button>
+          <button class="lp-btn lp-btn-primary" @click="router.push('/register')">{{ t('landing.start') }}</button>
         </div>
       </nav>
 
@@ -302,9 +306,9 @@ onUnmounted(() => {
         <p>Создавай колоды, учи по алгоритму интервального повторения — и больше не забывай то, что выучил.</p>
         <div class="lp-hero-actions">
           <button class="lp-btn lp-btn-primary lp-btn-lg" @click="router.push('/register')">
-            <span>Начать бесплатно</span>
+            <span>{{ t('landing.getStarted') }}</span>
           </button>
-          <button class="lp-btn lp-btn-outline lp-btn-lg" @click="router.push('/login')">Войти</button>
+          <button class="lp-btn lp-btn-outline lp-btn-lg" @click="router.push('/login')">{{ t('landing.signIn') }}</button>
         </div>
 
         <div class="lp-demo" aria-label="Превью карточки">
@@ -356,7 +360,7 @@ onUnmounted(() => {
               </div>
             </div>
           </div>
-          <div class="lp-demo-hint">клик по карточке или <kbd>Space</kbd> — перевернуть</div>
+          <div class="lp-demo-hint" v-html="t('landing.demoHint')"></div>
         </div>
       </header>
 
@@ -396,7 +400,7 @@ onUnmounted(() => {
       <section class="lp-cta">
         <h2>Уже <span class="lp-counter" ref="counterRef">47&nbsp;823</span> карточек ждут тебя.</h2>
         <button class="lp-btn lp-btn-primary lp-btn-xl" @click="router.push('/register')">
-          <span>Создать аккаунт — это бесплатно</span>
+          <span>{{ t('landing.createAccountCta') }}</span>
         </button>
       </section>
 

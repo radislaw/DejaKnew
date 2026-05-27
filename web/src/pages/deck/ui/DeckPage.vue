@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getDeck } from '@/entities/deck'
 import { useCardStore } from '@/entities/card'
 import type { Card } from '@/entities/card'
@@ -8,6 +9,7 @@ import { CardCreateForm } from '@/features/card-create'
 import { CardImportForm } from '@/features/card-import'
 import { CardExportButton } from '@/features/card-export'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const deckId = route.params.id as string
@@ -34,7 +36,7 @@ onMounted(async () => {
     deckDescription.value = detail.description
     cardStore.setCards(detail.cards)
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Failed to load deck'
+    error.value = e instanceof Error ? e.message : t('deck.failedToLoad')
   } finally {
     loading.value = false
   }
@@ -46,7 +48,7 @@ async function onCreate(input: { front: string; back: string; topic?: string; le
     await cardStore.addCard(deckId, input)
     showForm.value = false
   } catch (e) {
-    createError.value = e instanceof Error ? e.message : 'Failed to add card'
+    createError.value = e instanceof Error ? e.message : t('deck.failedToAdd')
   }
 }
 
@@ -67,7 +69,7 @@ async function saveEdit(cardId: string) {
     await cardStore.updateCardItem(cardId, { front: editFront.value, back: editBack.value })
     editingId.value = null
   } catch (e) {
-    editError.value = e instanceof Error ? e.message : 'Failed to save'
+    editError.value = e instanceof Error ? e.message : t('deck.failedToSave')
   }
 }
 
@@ -92,7 +94,7 @@ async function onDelete(cardId: string) {
         class="text-slate-400 hover:text-slate-200 text-sm"
         @click="router.push({ name: 'home' })"
       >
-        ← Back
+        {{ t('common.back') }}
       </button>
       <div class="flex-1">
         <h1 class="text-xl font-semibold tracking-tight">{{ deckTitle }}</h1>
@@ -102,31 +104,31 @@ async function onDelete(cardId: string) {
         class="rounded-lg bg-emerald-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-emerald-500"
         @click="router.push({ name: 'study', params: { id: deckId } })"
       >
-        Study
+        {{ t('deck.study') }}
       </button>
     </header>
 
     <main class="mx-auto max-w-4xl">
-      <p v-if="loading" class="text-sm text-slate-400">Loading…</p>
+      <p v-if="loading" class="text-sm text-slate-400">{{ t('common.loading') }}</p>
       <p v-else-if="error" class="text-sm text-red-400">{{ error }}</p>
 
       <template v-else>
         <div class="mb-4 flex items-center justify-between">
           <h2 class="text-lg font-medium">
-            Cards <span class="text-slate-500 text-sm font-normal">({{ cardStore.cards.length }})</span>
+            {{ t('deck.cards') }} <span class="text-slate-500 text-sm font-normal">({{ cardStore.cards.length }})</span>
           </h2>
           <div v-if="!showForm && !showImport" class="flex gap-2">
             <button
               class="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-500"
               @click="showForm = true"
             >
-              + Add card
+              {{ t('deck.addCard') }}
             </button>
             <button
               class="rounded-lg border border-slate-600 px-4 py-1.5 text-sm font-medium text-slate-300 hover:border-slate-500 hover:text-slate-100"
               @click="showImport = true"
             >
-              Import
+              {{ t('deck.import') }}
             </button>
             <CardExportButton :deck-id="deckId" />
           </div>
@@ -150,7 +152,7 @@ async function onDelete(cardId: string) {
         <p v-if="createError" class="mb-3 text-sm text-red-400">{{ createError }}</p>
 
         <p v-if="cardStore.cards.length === 0" class="text-sm text-slate-500">
-          No cards yet. Add your first one.
+          {{ t('deck.noCards') }}
         </p>
 
         <ul v-else class="flex flex-col gap-3">
@@ -177,13 +179,13 @@ async function onDelete(cardId: string) {
                     class="rounded-lg bg-sky-600 px-3 py-1 text-sm font-medium text-white hover:bg-sky-500"
                     @click="saveEdit(card.id)"
                   >
-                    Save
+                    {{ t('common.save') }}
                   </button>
                   <button
                     class="rounded-lg px-3 py-1 text-sm text-slate-400 hover:text-slate-200"
                     @click="cancelEdit"
                   >
-                    Cancel
+                    {{ t('common.cancel') }}
                   </button>
                 </div>
               </div>
@@ -193,11 +195,11 @@ async function onDelete(cardId: string) {
               <div class="flex items-start justify-between gap-2">
                 <div class="flex-1 grid sm:grid-cols-2 gap-x-6 gap-y-1">
                   <div>
-                    <p class="text-xs text-slate-500 mb-0.5">Front</p>
+                    <p class="text-xs text-slate-500 mb-0.5">{{ t('deck.front') }}</p>
                     <p class="text-sm text-slate-100 whitespace-pre-wrap">{{ card.content.front }}</p>
                   </div>
                   <div>
-                    <p class="text-xs text-slate-500 mb-0.5">Back</p>
+                    <p class="text-xs text-slate-500 mb-0.5">{{ t('deck.back') }}</p>
                     <p class="text-sm text-slate-300 whitespace-pre-wrap">{{ card.content.back }}</p>
                   </div>
                 </div>
@@ -206,7 +208,7 @@ async function onDelete(cardId: string) {
                     class="text-slate-500 hover:text-sky-400 text-xs"
                     @click="startEdit(card.id, card.content.front, card.content.back)"
                   >
-                    Edit
+                    {{ t('common.edit') }}
                   </button>
                   <button
                     class="text-slate-500 hover:text-red-400 text-xs"

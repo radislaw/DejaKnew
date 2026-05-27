@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import type { Deck } from '@/entities/deck'
+
+const { t } = useI18n()
 
 defineProps<{ decks: Deck[] }>()
 const emit = defineEmits<{ delete: [id: string] }>()
@@ -24,7 +27,7 @@ const emit = defineEmits<{ delete: [id: string] }>()
         <span class="text-sm font-medium text-slate-100 leading-snug">{{ deck.title }}</span>
         <button
           class="shrink-0 text-slate-600 opacity-0 transition hover:text-red-400 group-hover:opacity-100"
-          title="Delete deck"
+          :title="t('deck.deleteDeck')"
           @click="emit('delete', deck.id)"
         >
           ✕

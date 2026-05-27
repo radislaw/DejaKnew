@@ -22,6 +22,7 @@ func NewAuthHandler(auth *service.AuthService) *AuthHandler {
 type credentials struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required,min=8"`
+	Locale   string `json:"locale"`
 }
 
 type authResponse struct {
@@ -35,7 +36,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	token, user, err := h.auth.Register(body.Email, body.Password)
+	token, user, err := h.auth.Register(body.Email, body.Password, body.Locale)
 	if errors.Is(err, domain.ErrUserExists) {
 		c.JSON(http.StatusConflict, gin.H{"error": "email already registered"})
 		return

@@ -29,7 +29,8 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function register(email: string, password: string): Promise<void> {
-    const res = await registerRequest(email, password)
+    const locale = localStorage.getItem('locale') ?? 'en'
+    const res = await registerRequest(email, password, locale)
     applyToken(res.token)
     user.value = res.user
   }

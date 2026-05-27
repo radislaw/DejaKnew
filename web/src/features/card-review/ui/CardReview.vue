@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { marked } from 'marked'
 import type { QueueCard } from '@/entities/study-progress'
+
+const { t } = useI18n()
 
 const props = defineProps<{ card: QueueCard }>()
 
@@ -46,7 +49,7 @@ const tags = computed(() => props.card.content.tags ?? [])
           >{{ card.content.topic }}</span>
         </div>
         <p class="text-center text-xl font-medium text-slate-100">{{ card.content.front }}</p>
-        <span class="mt-6 text-xs text-slate-500">tap to reveal</span>
+        <span class="mt-6 text-xs text-slate-500">{{ t('cardReview.tapToReveal') }}</span>
       </div>
 
       <!-- Back -->
@@ -75,7 +78,7 @@ const tags = computed(() => props.card.content.tags ?? [])
           class="mt-3 self-start text-xs text-sky-400 hover:text-sky-300 hover:underline"
           @click.stop
         >
-          Source ↗
+          {{ t('cardReview.source') }}
         </a>
       </div>
     </div>
@@ -85,25 +88,25 @@ const tags = computed(() => props.card.content.tags ?? [])
         class="rounded-xl border border-slate-600 bg-slate-800 py-3 text-sm font-medium text-red-400 hover:bg-red-900/30"
         @click="emit('rate', 0)"
       >
-        Again
+        {{ t('cardReview.again') }}
       </button>
       <button
         class="rounded-xl border border-slate-600 bg-slate-800 py-3 text-sm font-medium text-orange-400 hover:bg-orange-900/30"
         @click="emit('rate', 1)"
       >
-        Hard
+        {{ t('cardReview.hard') }}
       </button>
       <button
         class="rounded-xl border border-slate-600 bg-slate-800 py-3 text-sm font-medium text-sky-400 hover:bg-sky-900/30"
         @click="emit('rate', 2)"
       >
-        Good
+        {{ t('cardReview.good') }}
       </button>
       <button
         class="rounded-xl border border-slate-600 bg-slate-800 py-3 text-sm font-medium text-emerald-400 hover:bg-emerald-900/30"
         @click="emit('rate', 3)"
       >
-        Easy
+        {{ t('cardReview.easy') }}
       </button>
     </div>
   </div>

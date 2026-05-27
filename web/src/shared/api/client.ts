@@ -3,9 +3,14 @@ import { API_BASE_URL } from '@/shared/config'
 // The auth token lives here so the client can attach it to every request.
 // The auth store (a feature) calls setAuthToken — shared never imports up.
 let authToken: string | null = null
+let currentLocale: string = 'en'
 
 export function setAuthToken(token: string | null): void {
   authToken = token
+}
+
+export function setLocale(locale: string): void {
+  currentLocale = locale
 }
 
 export class ApiError extends Error {
@@ -24,7 +29,10 @@ interface RequestOptions {
 }
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept-Language': currentLocale,
+  }
   if (authToken) headers.Authorization = `Bearer ${authToken}`
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -47,7 +55,7 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 }
 
 export async function apiBlobRequest(path: string): Promise<{ blob: Blob; filename: string }> {
-  const headers: Record<string, string> = {}
+  const headers: Record<string, string> = { 'Accept-Language': currentLocale }
   if (authToken) headers.Authorization = `Bearer ${authToken}`
 
   const response = await fetch(`${API_BASE_URL}${path}`, { headers })

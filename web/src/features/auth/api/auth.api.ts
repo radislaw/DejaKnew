@@ -6,10 +6,10 @@ export interface AuthResponse {
   user: User
 }
 
-export function registerRequest(email: string, password: string): Promise<AuthResponse> {
+export function registerRequest(email: string, password: string, locale: string): Promise<AuthResponse> {
   return apiRequest<AuthResponse>('/auth/register', {
     method: 'POST',
-    body: { email, password },
+    body: { email, password, locale },
   })
 }
 

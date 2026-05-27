@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { exportCards, type ExportFormat } from '@/entities/card'
+
+const { t } = useI18n()
 
 const props = defineProps<{ deckId?: string }>()
 
@@ -27,7 +30,7 @@ async function download(format: ExportFormat) {
     a.click()
     URL.revokeObjectURL(url)
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Export failed'
+    error.value = e instanceof Error ? e.message : t('cardExport.exportFailed')
   } finally {
     loading.value = false
   }
@@ -41,7 +44,7 @@ async function download(format: ExportFormat) {
       :disabled="loading"
       @click="open = !open"
     >
-      {{ loading ? 'Exporting…' : 'Export' }}
+      {{ loading ? t('cardExport.exporting') : t('cardExport.export') }}
     </button>
     <div
       v-if="open"

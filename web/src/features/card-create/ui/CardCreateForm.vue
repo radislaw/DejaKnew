@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import type { CreateCardInput } from '@/entities/card'
+
+const { t } = useI18n()
 
 const emit = defineEmits<{
   submit: [input: CreateCardInput]
@@ -43,17 +46,17 @@ function onSubmit() {
     class="flex flex-col gap-3 rounded-xl border border-slate-700 bg-slate-800/60 p-4"
     @submit.prevent="onSubmit"
   >
-    <h2 class="text-sm font-medium text-slate-300">New card</h2>
+    <h2 class="text-sm font-medium text-slate-300">{{ t('cardCreate.title') }}</h2>
     <textarea
       v-model="front"
-      placeholder="Front"
+      :placeholder="t('cardCreate.frontPlaceholder')"
       rows="2"
       required
       class="resize-none rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-sky-500"
     />
     <textarea
       v-model="back"
-      placeholder="Back (markdown supported)"
+      :placeholder="t('cardCreate.backPlaceholder')"
       rows="3"
       required
       class="resize-none rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-sky-500"
@@ -64,31 +67,31 @@ function onSubmit() {
       class="self-start text-xs text-slate-500 hover:text-slate-300 transition-colors"
       @click="showOptional = !showOptional"
     >
-      {{ showOptional ? '▲ Less' : '▼ More options' }}
+      {{ showOptional ? t('cardCreate.less') : t('cardCreate.moreOptions') }}
     </button>
 
     <template v-if="showOptional">
       <div class="grid grid-cols-2 gap-2">
         <input
           v-model="topic"
-          placeholder="Topic (e.g. Hoisting)"
+          :placeholder="t('cardCreate.topicPlaceholder')"
           class="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-sky-500"
         />
         <input
           v-model="level"
-          placeholder="Level (e.g. Уровень 1)"
+          :placeholder="t('cardCreate.levelPlaceholder')"
           class="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-sky-500"
         />
       </div>
       <input
         v-model="sourceUrl"
-        placeholder="Source URL (optional)"
+        :placeholder="t('cardCreate.sourceUrlPlaceholder')"
         type="url"
         class="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-sky-500"
       />
       <input
         v-model="tagsRaw"
-        placeholder="Tags, comma-separated (e.g. js, hoisting, let)"
+        :placeholder="t('cardCreate.tagsPlaceholder')"
         class="rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 outline-none focus:border-sky-500"
       />
     </template>
@@ -98,14 +101,14 @@ function onSubmit() {
         type="submit"
         class="rounded-lg bg-sky-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-sky-500"
       >
-        Add card
+        {{ t('cardCreate.addCard') }}
       </button>
       <button
         type="button"
         class="rounded-lg px-4 py-1.5 text-sm text-slate-400 hover:text-slate-200"
         @click="emit('cancel')"
       >
-        Cancel
+        {{ t('common.cancel') }}
       </button>
     </div>
   </form>

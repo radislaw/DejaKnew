@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps<{
   submitLabel: string
@@ -21,7 +24,7 @@ const password = ref('')
       v-model="email"
       type="email"
       required
-      placeholder="email"
+      :placeholder="t('auth.emailPlaceholder')"
       class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-200 placeholder:text-slate-500 outline-none focus:border-sky-400"
     />
     <input
@@ -29,7 +32,7 @@ const password = ref('')
       type="password"
       required
       minlength="8"
-      placeholder="password (min 8 characters)"
+      :placeholder="t('auth.passwordPlaceholder')"
       class="rounded-lg border border-slate-700 bg-slate-900 px-4 py-2.5 text-slate-200 placeholder:text-slate-500 outline-none focus:border-sky-400"
     />
     <p v-if="error" class="text-sm text-rose-400">{{ error }}</p>

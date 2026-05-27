@@ -47,7 +47,7 @@ func newService() *AuthService {
 
 func TestRegisterIssuesTokenAndHashesPassword(t *testing.T) {
 	s := newService()
-	token, user, err := s.Register("a@b.com", "password123")
+	token, user, err := s.Register("a@b.com", "password123", "en")
 	if err != nil {
 		t.Fatalf("register failed: %v", err)
 	}
@@ -64,10 +64,10 @@ func TestRegisterIssuesTokenAndHashesPassword(t *testing.T) {
 
 func TestRegisterRejectsDuplicateEmail(t *testing.T) {
 	s := newService()
-	if _, _, err := s.Register("a@b.com", "password123"); err != nil {
+	if _, _, err := s.Register("a@b.com", "password123", "en"); err != nil {
 		t.Fatalf("first register failed: %v", err)
 	}
-	_, _, err := s.Register("a@b.com", "other-password")
+	_, _, err := s.Register("a@b.com", "other-password", "en")
 	if !errors.Is(err, domain.ErrUserExists) {
 		t.Fatalf("expected ErrUserExists, got %v", err)
 	}
@@ -75,7 +75,7 @@ func TestRegisterRejectsDuplicateEmail(t *testing.T) {
 
 func TestLoginSucceedsWithCorrectPassword(t *testing.T) {
 	s := newService()
-	if _, _, err := s.Register("a@b.com", "password123"); err != nil {
+	if _, _, err := s.Register("a@b.com", "password123", "en"); err != nil {
 		t.Fatalf("register failed: %v", err)
 	}
 	token, _, err := s.Login("a@b.com", "password123")
@@ -89,7 +89,7 @@ func TestLoginSucceedsWithCorrectPassword(t *testing.T) {
 
 func TestLoginRejectsWrongPassword(t *testing.T) {
 	s := newService()
-	if _, _, err := s.Register("a@b.com", "password123"); err != nil {
+	if _, _, err := s.Register("a@b.com", "password123", "en"); err != nil {
 		t.Fatalf("register failed: %v", err)
 	}
 	_, _, err := s.Login("a@b.com", "wrong")

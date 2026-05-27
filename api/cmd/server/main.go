@@ -6,11 +6,14 @@ import (
 	"flashcards/api/internal/auth"
 	"flashcards/api/internal/config"
 	"flashcards/api/internal/handler"
+	"flashcards/api/internal/i18n"
 	"flashcards/api/internal/repository"
 	"flashcards/api/internal/service"
 )
 
 func main() {
+	i18n.Init()
+
 	cfg := config.Load()
 
 	db, err := repository.Connect(cfg.DatabaseURL)

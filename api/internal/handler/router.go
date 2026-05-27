@@ -18,7 +18,7 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept-Language"},
 		ExposeHeaders:    []string{"Content-Length", "Content-Disposition"},
 		AllowCredentials: false,
 		MaxAge:           12 * time.Hour,
@@ -29,6 +29,7 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 	})
 
 	api := r.Group("/api/v1")
+	api.Use(middleware.LocaleFromRequest())
 	{
 		api.POST("/auth/register", authHandler.Register)
 		api.POST("/auth/login", authHandler.Login)

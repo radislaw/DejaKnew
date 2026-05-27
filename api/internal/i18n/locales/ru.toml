@@ -1,0 +1,5 @@
+[WelcomeSubject]
+other = "Добро пожаловать в DéjàKnew!"
+
+[WelcomeBody]
+other = "Привет {{.Email}}, ваш аккаунт готов."

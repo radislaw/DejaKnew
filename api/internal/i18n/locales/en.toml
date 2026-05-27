@@ -1,0 +1,5 @@
+[WelcomeSubject]
+other = "Welcome to DéjàKnew!"
+
+[WelcomeBody]
+other = "Hi {{.Email}}, your account is ready."

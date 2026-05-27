@@ -28,7 +28,7 @@ func NewAuthService(users UserRepository, tokens *auth.TokenManager) *AuthServic
 }
 
 // Register creates a new account and returns a signed token.
-func (s *AuthService) Register(email, password string) (string, *domain.User, error) {
+func (s *AuthService) Register(email, password, locale string) (string, *domain.User, error) {
 	existing, err := s.users.FindByEmail(email)
 	if err != nil && !errors.Is(err, domain.ErrNotFound) {
 		return "", nil, err
@@ -42,10 +42,14 @@ func (s *AuthService) Register(email, password string) (string, *domain.User, er
 		return "", nil, err
 	}
 
+	if locale != "ru" {
+		locale = "en"
+	}
 	user := &domain.User{
 		ID:           uuid.NewString(),
 		Email:        email,
 		PasswordHash: hash,
+		Locale:       locale,
 	}
 	if err := s.users.Create(user); err != nil {
 		return "", nil, err

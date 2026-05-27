@@ -1,0 +1,99 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "← Back",
+    "edit": "Edit"
+  },
+  "auth": {
+    "emailPlaceholder": "email",
+    "passwordPlaceholder": "password (min 8 characters)",
+    "signInTitle": "Sign in",
+    "signInButton": "Sign in",
+    "signInLink": "Sign in",
+    "registerTitle": "Create account",
+    "registerButton": "Register",
+    "signOut": "Sign out",
+    "noAccount": "No account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInFailed": "Sign in failed",
+    "registrationFailed": "Registration failed"
+  },
+  "home": {
+    "title": "DéjàKnew",
+    "myDecks": "My decks",
+    "newDeck": "+ New deck",
+    "noDecks": "No decks yet. Create your first one.",
+    "failedToCreateDeck": "Failed to create deck"
+  },
+  "deck": {
+    "study": "Study",
+    "addCard": "+ Add card",
+    "import": "Import",
+    "cards": "Cards",
+    "noCards": "No cards yet. Add your first one.",
+    "failedToLoad": "Failed to load deck",
+    "failedToAdd": "Failed to add card",
+    "failedToSave": "Failed to save",
+    "front": "Front",
+    "back": "Back",
+    "deleteDeck": "Delete deck"
+  },
+  "deckCreate": {
+    "title": "New deck",
+    "titlePlaceholder": "Title",
+    "descriptionPlaceholder": "Description (optional)",
+    "create": "Create"
+  },
+  "cardCreate": {
+    "title": "New card",
+    "frontPlaceholder": "Front",
+    "backPlaceholder": "Back (markdown supported)",
+    "less": "▲ Less",
+    "moreOptions": "▼ More options",
+    "topicPlaceholder": "Topic (e.g. Hoisting)",
+    "levelPlaceholder": "Level (e.g. Level 1)",
+    "sourceUrlPlaceholder": "Source URL (optional)",
+    "tagsPlaceholder": "Tags, comma-separated (e.g. js, hoisting, let)",
+    "addCard": "Add card"
+  },
+  "cardReview": {
+    "tapToReveal": "tap to reveal",
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
+    "source": "Source ↗"
+  },
+  "cardImport": {
+    "title": "Import cards",
+    "chooseFile": "Choose file (.json or .csv)",
+    "preview": "Preview: {count} card | Preview: {count} cards",
+    "import": "Import",
+    "importing": "Importing…",
+    "failedToParse": "Failed to parse file",
+    "importFailed": "Import failed",
+    "csvHint": "Columns: front, back, topic, level, sourceUrl, tags — tags separated by |",
+    "jsonHint": "JSON array: [{\"front\":\"...\",\"back\":\"...\"}, ...]"
+  },
+  "cardExport": {
+    "export": "Export",
+    "exporting": "Exporting…",
+    "exportFailed": "Export failed"
+  },
+  "study": {
+    "title": "Study session",
+    "remaining": "left",
+    "done": "Done for today!",
+    "doneMessage": "All cards reviewed. Come back tomorrow for more.",
+    "backToDeck": "Back to deck"
+  },
+  "landing": {
+    "start": "Start →",
+    "getStarted": "Get started — it's free",
+    "signIn": "Sign in",
+    "createAccountCta": "Create account — it's free",
+    "demoHint": "click the card or <kbd>Space</kbd> — flip"
+  }
+}

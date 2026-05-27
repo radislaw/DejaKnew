@@ -1,0 +1,99 @@
+{
+  "common": {
+    "loading": "Загрузка…",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "back": "← Назад",
+    "edit": "Изм."
+  },
+  "auth": {
+    "emailPlaceholder": "email",
+    "passwordPlaceholder": "пароль (мин. 8 символов)",
+    "signInTitle": "Вход",
+    "signInButton": "Войти",
+    "signInLink": "Войти",
+    "registerTitle": "Создать аккаунт",
+    "registerButton": "Зарегистрироваться",
+    "signOut": "Выйти",
+    "noAccount": "Нет аккаунта?",
+    "alreadyHaveAccount": "Уже есть аккаунт?",
+    "signInFailed": "Ошибка входа",
+    "registrationFailed": "Ошибка регистрации"
+  },
+  "home": {
+    "title": "DéjàKnew",
+    "myDecks": "Мои колоды",
+    "newDeck": "+ Новая колода",
+    "noDecks": "Колод ещё нет. Создайте первую.",
+    "failedToCreateDeck": "Не удалось создать колоду"
+  },
+  "deck": {
+    "study": "Учить",
+    "addCard": "+ Добавить карточку",
+    "import": "Импорт",
+    "cards": "Карточки",
+    "noCards": "Карточек ещё нет. Добавьте первую.",
+    "failedToLoad": "Не удалось загрузить колоду",
+    "failedToAdd": "Не удалось добавить карточку",
+    "failedToSave": "Не удалось сохранить",
+    "front": "Лицо",
+    "back": "Оборот",
+    "deleteDeck": "Удалить колоду"
+  },
+  "deckCreate": {
+    "title": "Новая колода",
+    "titlePlaceholder": "Название",
+    "descriptionPlaceholder": "Описание (необязательно)",
+    "create": "Создать"
+  },
+  "cardCreate": {
+    "title": "Новая карточка",
+    "frontPlaceholder": "Лицо",
+    "backPlaceholder": "Оборот (поддерживается markdown)",
+    "less": "▲ Меньше",
+    "moreOptions": "▼ Больше опций",
+    "topicPlaceholder": "Тема (напр. Hoisting)",
+    "levelPlaceholder": "Уровень (напр. Уровень 1)",
+    "sourceUrlPlaceholder": "URL источника (необязательно)",
+    "tagsPlaceholder": "Теги через запятую (напр. js, hoisting, let)",
+    "addCard": "Добавить карточку"
+  },
+  "cardReview": {
+    "tapToReveal": "нажмите, чтобы открыть",
+    "again": "Снова",
+    "hard": "Сложно",
+    "good": "Хорошо",
+    "easy": "Легко",
+    "source": "Источник ↗"
+  },
+  "cardImport": {
+    "title": "Импорт карточек",
+    "chooseFile": "Выберите файл (.json или .csv)",
+    "preview": "Найдено: {count} карточка | Найдено: {count} карточки | Найдено: {count} карточек",
+    "import": "Импортировать",
+    "importing": "Импортирую…",
+    "failedToParse": "Не удалось разобрать файл",
+    "importFailed": "Ошибка импорта",
+    "csvHint": "Столбцы: front, back, topic, level, sourceUrl, tags — теги через |",
+    "jsonHint": "JSON массив: [{\"front\":\"...\",\"back\":\"...\"}, ...]"
+  },
+  "cardExport": {
+    "export": "Экспорт",
+    "exporting": "Экспортирую…",
+    "exportFailed": "Ошибка экспорта"
+  },
+  "study": {
+    "title": "Сессия изучения",
+    "remaining": "осталось",
+    "done": "На сегодня готово!",
+    "doneMessage": "Все карточки повторены. Возвращайтесь завтра.",
+    "backToDeck": "К колоде"
+  },
+  "landing": {
+    "start": "Начать →",
+    "getStarted": "Начать бесплатно",
+    "signIn": "Войти",
+    "createAccountCta": "Создать аккаунт — это бесплатно",
+    "demoHint": "клик по карточке или <kbd>Space</kbd> — перевернуть"
+  }
+}
