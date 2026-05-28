@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { LocaleSwitcher } from '@/shared/ui'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t, tm, locale } = useI18n()
+const cycleWords = computed(() => tm('landing.cycleWords') as string[])
+
+watch(locale, () => {
+  if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
+  flipTimers.splice(0).forEach(clearTimeout)
+  startCycleWord()
+}, { flush: 'post' })
 
 const memoLayerRef = ref<HTMLDivElement | null>(null)
 const demoCardRef = ref<HTMLDivElement | null>(null)
@@ -161,11 +168,11 @@ onMounted(() => {
 })
 
 function startCycleWord() {
-  setTimeout(() => {
+  document.fonts.ready.then(() => {
     const cycleEl = cycleRef.value
     if (!cycleEl) return
     const wordEls = Array.from(cycleEl.querySelectorAll<HTMLElement>('.cycle-word'))
-    const widths = wordEls.map(w => Math.ceil(w.getBoundingClientRect().width))
+    const widths = wordEls.map(w => Math.ceil(w.getBoundingClientRect().width) + 4)
     cycleEl.style.width = widths[0] + 'px'
 
     let i = 0
@@ -180,7 +187,7 @@ function startCycleWord() {
       const t = setTimeout(() => cur.classList.remove('is-exit'), 600)
       flipTimers.push(t)
     }, 2400)
-  }, 50)
+  })
 }
 
 function buildMemo() {
@@ -236,7 +243,7 @@ function buildMemo() {
     g.style.setProperty('--float-del', (-Math.random() * 14).toFixed(2) + 's')
     g.innerHTML =
       `<div class="ghost-face front"><div class="ghost-meta">${v.tag}</div><div class="ghost-word ${v.wc}">${v.w}</div></div>` +
-      `<div class="ghost-face back"><div class="ghost-meta">перевод</div><div class="ghost-word ${v.tc}">${v.t}</div></div>`
+      `<div class="ghost-face back"><div class="ghost-meta">${t('landing.demoTranslation')}</div><div class="ghost-word ${v.tc}">${v.t}</div></div>`
     layer.appendChild(g)
     ghosts.push(g)
   })
@@ -288,22 +295,24 @@ onUnmounted(() => {
           <span>DéjàKnew</span>
         </a>
         <div class="lp-nav-actions">
-          <LocaleSwitcher />
           <button class="lp-btn lp-btn-ghost" @click="router.push('/login')">{{ t('landing.signIn') }}</button>
           <button class="lp-btn lp-btn-primary" @click="router.push('/register')">{{ t('landing.start') }}</button>
+          <LocaleSwitcher />
         </div>
       </nav>
 
       <!-- Hero -->
       <header class="lp-hero">
-        <span class="lp-eyebrow"><span class="lp-dot"></span> интервальное повторение · spaced repetition</span>
-        <h1>Учи <span class="lp-cycle" ref="cycleRef"
-          ><span class="cycle-word is-active">умнее</span
-          ><span class="cycle-word">быстрее</span
-          ><span class="cycle-word">глубже</span
-          ><span class="cycle-word">точнее</span
-        ></span>, не&nbsp;дольше</h1>
-        <p>Создавай колоды, учи по алгоритму интервального повторения — и больше не забывай то, что выучил.</p>
+        <span class="lp-eyebrow"><span class="lp-dot"></span> {{ t('landing.eyebrow') }}</span>
+        <h1>{{ t('landing.heroTitlePre') }} <span class="lp-cycle" ref="cycleRef"
+          ><span
+            v-for="(word, i) in cycleWords"
+            :key="word"
+            class="cycle-word"
+            :class="{ 'is-active': i === 0 }"
+          >{{ word }}</span
+        ></span>{{ t('landing.heroTitlePost') }}</h1>
+        <p>{{ t('landing.heroSubtitle') }}</p>
         <div class="lp-hero-actions">
           <button class="lp-btn lp-btn-primary lp-btn-lg" @click="router.push('/register')">
             <span>{{ t('landing.getStarted') }}</span>
@@ -311,7 +320,7 @@ onUnmounted(() => {
           <button class="lp-btn lp-btn-outline lp-btn-lg" @click="router.push('/login')">{{ t('landing.signIn') }}</button>
         </div>
 
-        <div class="lp-demo" aria-label="Превью карточки">
+        <div class="lp-demo" :aria-label="t('landing.demoAriaLabel')">
           <div class="lp-demo-stack">
             <div
               class="lp-demo-card"
@@ -330,14 +339,14 @@ onUnmounted(() => {
                   <div class="lp-demo-example" v-html="demoExampleEn"></div>
                 </div>
                 <div class="lp-demo-reveal">
-                  <span>перевернуть</span>
+                  <span>{{ t('landing.demoReveal') }}</span>
                   <kbd>Space</kbd>
                 </div>
               </div>
               <div class="lp-demo-face back">
                 <div class="lp-demo-top">
                   <span>card&nbsp;12&nbsp;/&nbsp;47</span>
-                  <span class="lp-pill"><span class="lp-swatch"></span>перевод</span>
+                  <span class="lp-pill"><span class="lp-swatch"></span>{{ t('landing.demoTranslation') }}</span>
                 </div>
                 <div class="lp-demo-body">
                   <div class="lp-demo-word">{{ demoBackText }}</div>
@@ -368,7 +377,7 @@ onUnmounted(() => {
       <section class="lp-section">
         <div class="lp-section-head">
           <div class="lp-section-label">// features</div>
-          <h2 class="lp-section-title">Три вещи, ради которых это работает</h2>
+          <h2 class="lp-section-title">{{ t('landing.featuresTitle') }}</h2>
         </div>
         <div class="lp-features">
           <article class="lp-card">
@@ -380,25 +389,25 @@ onUnmounted(() => {
               <circle cx="196" cy="8"  r="2.5" />
             </svg>
             <div class="lp-card-icon">🧠</div>
-            <h3 class="lp-card-title">Умные повторения</h3>
-            <p class="lp-card-body">Алгоритм сам решает, когда показать карточку — в самый нужный момент, прямо перед тем, как ты забудешь.</p>
+            <h3 class="lp-card-title">{{ t('landing.feature1Title') }}</h3>
+            <p class="lp-card-body">{{ t('landing.feature1Body') }}</p>
           </article>
           <article class="lp-card">
             <div class="lp-card-icon">📱</div>
-            <h3 class="lp-card-title">Везде с тобой</h3>
-            <p class="lp-card-body">Прогресс хранится в облаке. Начал на ноуте — продолжи с телефона.</p>
+            <h3 class="lp-card-title">{{ t('landing.feature2Title') }}</h3>
+            <p class="lp-card-body">{{ t('landing.feature2Body') }}</p>
           </article>
           <article class="lp-card">
             <div class="lp-card-icon">✈️</div>
-            <h3 class="lp-card-title">Работает офлайн</h3>
-            <p class="lp-card-body">Установи как приложение и учи даже без интернета — в самолёте, метро, где угодно.</p>
+            <h3 class="lp-card-title">{{ t('landing.feature3Title') }}</h3>
+            <p class="lp-card-body">{{ t('landing.feature3Body') }}</p>
           </article>
         </div>
       </section>
 
       <!-- Footer CTA -->
       <section class="lp-cta">
-        <h2>Уже <span class="lp-counter" ref="counterRef">47&nbsp;823</span> карточек ждут тебя.</h2>
+        <h2>{{ t('landing.ctaTitlePre') }}<span class="lp-counter" ref="counterRef">47&nbsp;823</span>{{ t('landing.ctaTitlePost') }}</h2>
         <button class="lp-btn lp-btn-primary lp-btn-xl" @click="router.push('/register')">
           <span>{{ t('landing.createAccountCta') }}</span>
         </button>
@@ -408,9 +417,9 @@ onUnmounted(() => {
       <footer class="lp-foot">
         <div>© 2026 DéjàKnew</div>
         <div class="lp-foot-links">
-          <a href="#">Политика</a>
-          <a href="#">Условия</a>
-          <a href="#">Контакты</a>
+          <a href="#">{{ t('landing.footerPolicy') }}</a>
+          <a href="#">{{ t('landing.footerTerms') }}</a>
+          <a href="#">{{ t('landing.footerContact') }}</a>
         </div>
       </footer>
     </div>
@@ -437,6 +446,7 @@ onUnmounted(() => {
   background: var(--bg);
   color: var(--fg);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 ::selection { background: rgba(14, 165, 233, 0.3); color: var(--fg); }

@@ -94,6 +94,26 @@
     "getStarted": "Get started — it's free",
     "signIn": "Sign in",
     "createAccountCta": "Create account — it's free",
-    "demoHint": "click the card or <kbd>Space</kbd> — flip"
+    "demoHint": "click the card or <kbd>Space</kbd> — flip",
+    "eyebrow": "spaced repetition · interval repetition",
+    "heroTitlePre": "Learn",
+    "heroTitlePost": ", not longer",
+    "cycleWords": ["smarter", "faster", "deeper", "sharper"],
+    "heroSubtitle": "Create decks, study with the spaced repetition algorithm — and never forget what you've learned.",
+    "demoAriaLabel": "Card preview",
+    "demoReveal": "flip",
+    "demoTranslation": "translation",
+    "featuresTitle": "Three things that make it work",
+    "feature1Title": "Smart repetitions",
+    "feature1Body": "The algorithm decides when to show a card — at the perfect moment, just before you forget.",
+    "feature2Title": "Always with you",
+    "feature2Body": "Progress stored in the cloud. Started on your laptop — continue on your phone.",
+    "feature3Title": "Works offline",
+    "feature3Body": "Install as an app and study without internet — on a plane, metro, anywhere.",
+    "ctaTitlePre": "Already ",
+    "ctaTitlePost": " cards waiting for you.",
+    "footerPolicy": "Policy",
+    "footerTerms": "Terms",
+    "footerContact": "Contact"
   }
 }
