@@ -8,6 +8,7 @@ import type { Card } from '@/entities/card'
 import { CardCreateForm } from '@/features/card-create'
 import { CardImportForm } from '@/features/card-import'
 import { CardExportButton } from '@/features/card-export'
+import { AppLayout } from '@/widgets/app-layout'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -88,8 +89,8 @@ async function onDelete(cardId: string) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#070d1c] px-4 py-6 text-slate-100">
-    <header class="mx-auto mb-8 flex max-w-4xl items-center gap-4">
+  <AppLayout>
+    <div class="mx-auto mb-6 flex max-w-4xl items-center gap-4">
       <button
         class="text-slate-400 hover:text-slate-200 text-sm"
         @click="router.push({ name: 'home' })"
@@ -106,7 +107,7 @@ async function onDelete(cardId: string) {
       >
         {{ t('deck.study') }}
       </button>
-    </header>
+    </div>
 
     <main class="mx-auto max-w-4xl">
       <p v-if="loading" class="text-sm text-slate-400">{{ t('common.loading') }}</p>
@@ -223,5 +224,5 @@ async function onDelete(cardId: string) {
         </ul>
       </template>
     </main>
-  </div>
+  </AppLayout>
 </template>

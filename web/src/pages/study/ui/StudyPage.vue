@@ -4,6 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useStudyStore } from '@/entities/study-progress'
 import { CardReview } from '@/features/card-review'
+import { AppLayout } from '@/widgets/app-layout'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -29,8 +30,8 @@ async function onRate(quality: 0 | 1 | 2 | 3) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#070d1c] px-4 py-6 text-slate-100">
-    <header class="mx-auto mb-8 flex max-w-xl items-center gap-4">
+  <AppLayout>
+    <div class="mx-auto mb-6 flex max-w-xl items-center gap-4">
       <button
         class="text-sm text-slate-400 hover:text-slate-200"
         @click="router.push({ name: 'deck', params: { id: deckId } })"
@@ -41,7 +42,7 @@ async function onRate(quality: 0 | 1 | 2 | 3) {
         <h1 class="text-lg font-semibold tracking-tight">{{ t('study.title') }}</h1>
       </div>
       <span class="text-sm text-slate-500">{{ study.remaining }} {{ t('study.remaining') }}</span>
-    </header>
+    </div>
 
     <main class="mx-auto max-w-xl">
       <p v-if="study.loading" class="text-center text-sm text-slate-400">{{ t('common.loading') }}</p>
@@ -69,5 +70,5 @@ async function onRate(quality: 0 | 1 | 2 | 3) {
         @rate="onRate"
       />
     </main>
-  </div>
+  </AppLayout>
 </template>

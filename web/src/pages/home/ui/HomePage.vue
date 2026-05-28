@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useAuthStore } from '@/features/auth'
 import { useDeckStore } from '@/entities/deck'
 import { DeckCreateForm } from '@/features/deck-create'
 import { DeckList } from '@/widgets/deck-list'
 import { CardExportButton } from '@/features/card-export'
-import { LocaleSwitcher } from '@/shared/ui'
+import { AppLayout } from '@/widgets/app-layout'
 
 const { t } = useI18n()
-const router = useRouter()
-const auth = useAuthStore()
 const decks = useDeckStore()
 const showForm = ref(false)
 const createError = ref<string | null>(null)
@@ -38,21 +34,7 @@ async function onDelete(id: string) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#070d1c] px-4 py-6 text-slate-100">
-    <header class="mx-auto mb-8 flex max-w-4xl items-center justify-between">
-      <h1 class="text-xl font-semibold tracking-tight">{{ t('home.title') }}</h1>
-      <div class="flex items-center gap-3">
-        <LocaleSwitcher />
-        <span class="text-sm text-slate-400">{{ auth.user?.email }}</span>
-        <button
-          class="rounded-lg px-3 py-1.5 text-sm text-slate-400 hover:text-slate-200"
-          @click="auth.logout(); router.push('/login')"
-        >
-          {{ t('auth.signOut') }}
-        </button>
-      </div>
-    </header>
-
+  <AppLayout>
     <main class="mx-auto max-w-4xl">
       <div class="mb-4 flex items-center justify-between">
         <h2 class="text-lg font-medium">{{ t('home.myDecks') }}</h2>
@@ -84,5 +66,5 @@ async function onDelete(id: string) {
       </p>
       <DeckList v-else :decks="decks.decks" @delete="onDelete" />
     </main>
-  </div>
+  </AppLayout>
 </template>
