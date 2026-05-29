@@ -103,6 +103,7 @@
     "demoAriaLabel": "Card preview",
     "demoReveal": "flip",
     "demoTranslation": "translation",
+    "demoCardOf": "card {current} / {total}",
     "featuresTitle": "Three things that make it work",
     "feature1Title": "Smart repetitions",
     "feature1Body": "The algorithm decides when to show a card — at the perfect moment, just before you forget.",

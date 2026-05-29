@@ -2,7 +2,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { LocaleSwitcher } from '@/shared/ui'
+import { FlipCard, LocaleSwitcher } from '@/shared/ui'
 
 const router = useRouter()
 const { t, tm, locale } = useI18n()
@@ -14,7 +14,18 @@ watch(locale, () => {
   startCycleWord()
 }, { flush: 'post' })
 
-const memoLayerRef = ref<HTMLDivElement | null>(null)
+interface MemoCard {
+  tag: string
+  w: string
+  t: string
+  wc: string
+  tc: string
+  flipped: boolean
+  active: boolean
+  style: Record<string, string>
+}
+
+const memoCards = ref<MemoCard[]>([])
 const demoCardRef = ref<HTMLDivElement | null>(null)
 const cycleRef = ref<HTMLSpanElement | null>(null)
 const counterRef = ref<HTMLSpanElement | null>(null)
@@ -59,7 +70,7 @@ const DECK = [
   },
 ]
 
-let demoIdx = 0
+const demoIdx = ref(0)
 let demoTimer: ReturnType<typeof setInterval> | null = null
 let cycleTimer: ReturnType<typeof setInterval> | null = null
 const flipTimers: ReturnType<typeof setTimeout>[] = []
@@ -76,8 +87,12 @@ function setDeckContent(d: typeof DECK[0]) {
 function flip() {
   isFlipped.value = !isFlipped.value
   if (!isFlipped.value) {
-    demoIdx = (demoIdx + 1) % DECK.length
-    setDeckContent(DECK[demoIdx])
+    // Swap content at midpoint of .9s transition — card is edge-on, change invisible
+    const sw = setTimeout(() => {
+      demoIdx.value = (demoIdx.value + 1) % DECK.length
+      setDeckContent(DECK[demoIdx.value])
+    }, 450)
+    flipTimers.push(sw)
   }
 }
 
@@ -191,9 +206,6 @@ function startCycleWord() {
 }
 
 function buildMemo() {
-  const layer = memoLayerRef.value
-  if (!layer) return
-
   const VOCAB = [
     { tag: 'en→ru', w: 'serendipity', t: 'случайность', wc: '', tc: 'ru' },
     { tag: 'en→ru', w: 'ephemeral', t: 'мимолётный', wc: '', tc: 'ru' },
@@ -229,39 +241,42 @@ function buildMemo() {
   ]
 
   const pool = VOCAB.slice().sort(() => Math.random() - 0.5)
-  const ghosts: HTMLElement[] = []
 
-  LAYOUT.forEach((pos, i) => {
+  memoCards.value = LAYOUT.map((pos, i) => {
     const v = pool[i % pool.length]
-    const g = document.createElement('div')
-    g.className = 'ghost'
-    g.style.left = pos.x + '%'
-    g.style.top = pos.y + '%'
-    g.style.setProperty('--base', `translate(-50%, -50%) rotate(${pos.rot}deg) scale(${pos.z === 1 ? 1 : 0.78})`)
-    g.style.opacity = String(pos.z === 1 ? 0.55 : 0.32)
-    g.style.setProperty('--float-dur', (14 + Math.random() * 10).toFixed(2) + 's')
-    g.style.setProperty('--float-del', (-Math.random() * 14).toFixed(2) + 's')
-    g.innerHTML =
-      `<div class="ghost-face front"><div class="ghost-meta">${v.tag}</div><div class="ghost-word ${v.wc}">${v.w}</div></div>` +
-      `<div class="ghost-face back"><div class="ghost-meta">${t('landing.demoTranslation')}</div><div class="ghost-word ${v.tc}">${v.t}</div></div>`
-    layer.appendChild(g)
-    ghosts.push(g)
+    return {
+      tag: v.tag,
+      w: v.w,
+      t: v.t,
+      wc: v.wc,
+      tc: v.tc,
+      flipped: false,
+      active: false,
+      style: {
+        left: pos.x + '%',
+        top: pos.y + '%',
+        '--base': `translate(-50%, -50%) rotate(${pos.rot}deg) scale(${pos.z === 1 ? 1 : 0.78})`,
+        opacity: String(pos.z === 1 ? 0.55 : 0.32),
+        '--float-dur': (14 + Math.random() * 10).toFixed(2) + 's',
+        '--float-del': (-Math.random() * 14).toFixed(2) + 's',
+      },
+    }
   })
 
-  const initFlips = Math.floor(ghosts.length * 0.35)
-  ghosts.map((_, i) => i).sort(() => Math.random() - 0.5).slice(0, initFlips)
-    .forEach(i => ghosts[i].classList.add('is-flipped'))
+  const initFlips = Math.floor(memoCards.value.length * 0.35)
+  memoCards.value.map((_, i) => i).sort(() => Math.random() - 0.5).slice(0, initFlips)
+    .forEach(i => { memoCards.value[i].flipped = true })
 
   let lastFlipped = -1
   function flipOne() {
-    let i = Math.floor(Math.random() * ghosts.length)
-    if (i === lastFlipped) i = (i + 1) % ghosts.length
+    let i = Math.floor(Math.random() * memoCards.value.length)
+    if (i === lastFlipped) i = (i + 1) % memoCards.value.length
     lastFlipped = i
-    const g = ghosts[i]
-    g.classList.add('is-active')
+    const card = memoCards.value[i]
+    card.active = true
     const t1 = setTimeout(() => {
-      g.classList.toggle('is-flipped')
-      const t2 = setTimeout(() => g.classList.remove('is-active'), 1400)
+      card.flipped = !card.flipped
+      const t2 = setTimeout(() => { card.active = false }, 1400)
       flipTimers.push(t2)
     }, 280)
     flipTimers.push(t1)
@@ -284,7 +299,24 @@ onUnmounted(() => {
 <template>
   <div class="lp-root">
     <div class="memo" aria-hidden="true">
-      <div class="memo-layer" ref="memoLayerRef"></div>
+      <div class="memo-layer">
+        <FlipCard
+          v-for="(card, i) in memoCards"
+          :key="i"
+          :flipped="card.flipped"
+          :class="['ghost', { 'is-active': card.active }]"
+          :style="card.style"
+        >
+          <template #front>
+            <div class="ghost-meta">{{ card.tag }}</div>
+            <div class="ghost-word" :class="card.wc || undefined">{{ card.w }}</div>
+          </template>
+          <template #back>
+            <div class="ghost-meta">{{ t('landing.demoTranslation') }}</div>
+            <div class="ghost-word" :class="card.tc || undefined">{{ card.t }}</div>
+          </template>
+        </FlipCard>
+      </div>
     </div>
 
     <div class="lp-page">
@@ -330,7 +362,7 @@ onUnmounted(() => {
             >
               <div class="lp-demo-face front">
                 <div class="lp-demo-top">
-                  <span>card&nbsp;12&nbsp;/&nbsp;47</span>
+                  <span>{{ t('landing.demoCardOf', { current: demoIdx + 12, total: 47 }) }}</span>
                   <span class="lp-pill"><span class="lp-swatch"></span>english&nbsp;·&nbsp;b2</span>
                 </div>
                 <div class="lp-demo-body">
@@ -345,7 +377,7 @@ onUnmounted(() => {
               </div>
               <div class="lp-demo-face back">
                 <div class="lp-demo-top">
-                  <span>card&nbsp;12&nbsp;/&nbsp;47</span>
+                  <span>{{ t('landing.demoCardOf', { current: demoIdx + 12, total: 47 }) }}</span>
                   <span class="lp-pill"><span class="lp-swatch"></span>{{ t('landing.demoTranslation') }}</span>
                 </div>
                 <div class="lp-demo-body">
@@ -486,25 +518,20 @@ onUnmounted(() => {
   will-change: transform;
 }
 
-/* ghost cards created via JS — :deep() reaches them */
+/* ghost cards rendered via v-for FlipCard */
 .memo :deep(.ghost) {
   position: absolute;
   width: 140px;
   height: 88px;
-  transform-style: preserve-3d;
-  transform: var(--base) rotateY(var(--tilt, 0deg));
-  transition: transform 1.4s cubic-bezier(.5,.05,.2,1), opacity 1.4s ease;
+  transform: var(--base);
   animation: ghost-float var(--float-dur, 18s) ease-in-out infinite;
   animation-delay: var(--float-del, 0s);
 }
-.memo :deep(.ghost.is-flipped) { --tilt: 180deg; }
 @keyframes ghost-float {
   0%, 100% { translate: 0 0; }
   50%       { translate: 0 -6px; }
 }
-.memo :deep(.ghost-face) {
-  position: absolute;
-  inset: 0;
+.memo :deep(.ghost .flip-card__face) {
   border-radius: 9px;
   border: 1px solid rgba(125,211,252,.18);
   background: linear-gradient(180deg, rgba(15,23,42,.55), rgba(7,13,28,.35));
@@ -512,12 +539,14 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   box-shadow: 0 8px 30px -12px rgba(2,6,23,.8), inset 0 1px 0 rgba(186,230,253,.06);
 }
-.memo :deep(.ghost-face.back) { transform: rotateY(180deg); }
-.memo :deep(.ghost-face::before) {
+.memo :deep(.ghost .flip-card__face--back) {
+  background: linear-gradient(180deg, rgba(2,44,80,.65), rgba(3,30,58,.45));
+  border-color: rgba(56,189,248,.28);
+  box-shadow: 0 8px 30px -12px rgba(2,6,23,.8), inset 0 0 40px -10px rgba(14,165,233,.08), inset 0 1px 0 rgba(56,189,248,.10);
+}
+.memo :deep(.ghost .flip-card__face::before) {
   content: "";
   position: absolute;
   top: 0; left: 12px; right: 12px;
@@ -539,7 +568,7 @@ onUnmounted(() => {
 }
 .memo :deep(.ghost-word.ru)  { font-size: 13px; color: rgba(186,230,253,.80); }
 .memo :deep(.ghost-word.cjk) { font-size: 22px; font-weight: 500; }
-.memo :deep(.ghost.is-active .ghost-face) {
+.memo :deep(.ghost.is-active .flip-card__face) {
   border-color: rgba(125,211,252,.45);
   box-shadow: 0 0 24px -4px rgba(14,165,233,.35), 0 8px 30px -12px rgba(2,6,23,.8), inset 0 1px 0 rgba(186,230,253,.10);
 }
