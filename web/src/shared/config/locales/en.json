@@ -114,7 +114,9 @@
     "doneTitle": "You're all set!",
     "doneSubtitle": "Your first deck is ready. Start studying now — the algorithm will take it from here.",
     "doneCta": "Start studying →",
-    "doneSkipCta": "Go to my deck →"
+    "doneSkipCta": "Go to my deck →",
+    "welcomeSkip": "Skip setup",
+    "deckSkip": "Skip — I’ll set up later"
   },
   "landing": {
     "start": "Start →",
@@ -125,7 +127,12 @@
     "eyebrow": "spaced repetition · interval repetition",
     "heroTitlePre": "Learn",
     "heroTitlePost": ", not longer",
-    "cycleWords": ["smarter", "faster", "deeper", "sharper"],
+    "cycleWords": [
+      "smarter",
+      "faster",
+      "deeper",
+      "sharper"
+    ],
     "heroSubtitle": "Create decks, study with the spaced repetition algorithm — and never forget what you've learned.",
     "demoAriaLabel": "Card preview",
     "demoReveal": "flip",

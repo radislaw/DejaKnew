@@ -62,6 +62,11 @@ function finish() {
   step.value = 'done'
 }
 
+function skip() {
+  localStorage.setItem('ob_done', '1')
+  router.push({ name: 'home' })
+}
+
 function goNext() {
   if (createdDeckId.value && cardAdded.value) {
     router.push({ name: 'study', params: { id: createdDeckId.value } })
@@ -100,6 +105,12 @@ function goNext() {
         >
           {{ t('onboarding.welcomeCta') }}
         </button>
+        <button
+          class="mt-4 w-full py-2 text-sm text-slate-500 transition hover:text-slate-300"
+          @click="skip"
+        >
+          {{ t('onboarding.welcomeSkip') }}
+        </button>
       </div>
 
       <!-- step: create deck -->
@@ -119,10 +130,16 @@ function goNext() {
         <p v-if="deckError" class="mb-3 text-sm text-red-400">{{ deckError }}</p>
         <button
           :disabled="!deckTitle.trim() || loading"
-          class="w-full rounded-xl bg-sky-600 py-3 text-sm font-semibold text-white transition hover:bg-sky-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
+          class="mb-3 w-full rounded-xl bg-sky-600 py-3 text-sm font-semibold text-white transition hover:bg-sky-500 active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
           @click="createDeck"
         >
           {{ loading ? t('common.loading') : t('onboarding.deckCta') }}
+        </button>
+        <button
+          class="w-full py-2 text-sm text-slate-500 transition hover:text-slate-300"
+          @click="skip"
+        >
+          {{ t('onboarding.deckSkip') }}
         </button>
       </div>
 
