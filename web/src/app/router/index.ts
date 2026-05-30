@@ -4,6 +4,7 @@ import { LoginPage } from '@/pages/login'
 import { RegisterPage } from '@/pages/register'
 import { DeckPage } from '@/pages/deck'
 import { StudyPage } from '@/pages/study'
+import { OnboardingPage } from '@/pages/onboarding'
 import { useAuthStore } from '@/features/auth'
 
 declare module 'vue-router' {
@@ -20,15 +21,27 @@ export const router = createRouter({
     { path: '/study/:id', name: 'study', component: StudyPage, meta: { requiresAuth: true } },
     { path: '/login', name: 'login', component: LoginPage },
     { path: '/register', name: 'register', component: RegisterPage },
+    { path: '/onboarding', name: 'onboarding', component: OnboardingPage },
   ],
 })
 
 router.beforeEach((to) => {
   const auth = useAuthStore()
+  const onboardingDone = localStorage.getItem('ob_done')
+
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'home' }
   }
   if ((to.name === 'login' || to.name === 'register') && auth.isAuthenticated) {
+    return { name: 'home' }
+  }
+  if (auth.isAuthenticated && !onboardingDone && to.name !== 'onboarding') {
+    return { name: 'onboarding' }
+  }
+  if (to.name === 'onboarding' && !auth.isAuthenticated) {
+    return { name: 'home' }
+  }
+  if (to.name === 'onboarding' && onboardingDone) {
     return { name: 'home' }
   }
 })
