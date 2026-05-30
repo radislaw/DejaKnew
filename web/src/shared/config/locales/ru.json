@@ -18,7 +18,10 @@
     "noAccount": "Нет аккаунта?",
     "alreadyHaveAccount": "Уже есть аккаунт?",
     "signInFailed": "Ошибка входа",
-    "registrationFailed": "Ошибка регистрации"
+    "registrationFailed": "Ошибка регистрации",
+    "orContinueWith": "или войти через",
+    "continueWithGoogle": "Войти через Google",
+    "continueWithYandex": "Войти через Яндекс"
   },
   "home": {
     "title": "DéjàKnew",

@@ -24,5 +24,7 @@ func Migrate(db *gorm.DB) error {
 	if err := db.AutoMigrate(&domain.User{}, &domain.Deck{}, &domain.Card{}, &domain.StudyProgress{}, &domain.ReviewLog{}); err != nil {
 		return fmt.Errorf("auto-migrate: %w", err)
 	}
+	// password_hash is nullable for OAuth users; drop NOT NULL if still set from prior schema.
+	db.Exec("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
 	return nil
 }

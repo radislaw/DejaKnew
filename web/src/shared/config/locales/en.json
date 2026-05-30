@@ -18,7 +18,10 @@
     "noAccount": "No account?",
     "alreadyHaveAccount": "Already have an account?",
     "signInFailed": "Sign in failed",
-    "registrationFailed": "Registration failed"
+    "registrationFailed": "Registration failed",
+    "orContinueWith": "or continue with",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithYandex": "Continue with Yandex"
   },
   "home": {
     "title": "DéjàKnew",

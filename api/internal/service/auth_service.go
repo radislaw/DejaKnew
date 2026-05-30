@@ -16,6 +16,7 @@ type UserRepository interface {
 	Create(user *domain.User) error
 	FindByEmail(email string) (*domain.User, error)
 	FindByID(id string) (*domain.User, error)
+	FindByProvider(provider, providerID string) (*domain.User, error)
 }
 
 type AuthService struct {
@@ -85,4 +86,32 @@ func (s *AuthService) Login(email, password string) (string, *domain.User, error
 // CurrentUser loads the user behind an authenticated request.
 func (s *AuthService) CurrentUser(id string) (*domain.User, error) {
 	return s.users.FindByID(id)
+}
+
+// LoginWithOAuth finds or creates a user from an OAuth provider and issues a JWT.
+func (s *AuthService) LoginWithOAuth(provider, providerID, email, locale string) (string, *domain.User, error) {
+	user, err := s.users.FindByProvider(provider, providerID)
+	if err != nil && !errors.Is(err, domain.ErrNotFound) {
+		return "", nil, err
+	}
+	if user != nil {
+		token, err := s.tokens.Issue(user.ID)
+		return token, user, err
+	}
+
+	if locale != "ru" {
+		locale = "en"
+	}
+	user = &domain.User{
+		ID:         uuid.NewString(),
+		Email:      email,
+		Provider:   provider,
+		ProviderID: providerID,
+		Locale:     locale,
+	}
+	if err := s.users.Create(user); err != nil {
+		return "", nil, err
+	}
+	token, err := s.tokens.Issue(user.ID)
+	return token, user, err
 }

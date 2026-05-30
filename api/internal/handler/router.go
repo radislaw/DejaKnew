@@ -12,11 +12,11 @@ import (
 )
 
 // Router wires all routes. New resource handlers are registered here.
-func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler, studyHandler *StudyHandler) *gin.Engine {
+func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *OAuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler, studyHandler *StudyHandler) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174"},
+		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept-Language"},
 		ExposeHeaders:    []string{"Content-Length", "Content-Disposition"},
@@ -33,6 +33,10 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, deckHandler *De
 	{
 		api.POST("/auth/register", authHandler.Register)
 		api.POST("/auth/login", authHandler.Login)
+		api.GET("/auth/google", oauthHandler.GoogleRedirect)
+		api.GET("/auth/google/callback", oauthHandler.GoogleCallback)
+		api.GET("/auth/yandex", oauthHandler.YandexRedirect)
+		api.GET("/auth/yandex/callback", oauthHandler.YandexCallback)
 
 		protected := api.Group("")
 		protected.Use(middleware.RequireAuth(tokens))

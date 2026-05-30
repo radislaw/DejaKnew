@@ -10,20 +10,25 @@ import (
 
 // fakeUserRepo is an in-memory UserRepository for unit tests.
 type fakeUserRepo struct {
-	byEmail map[string]*domain.User
-	byID    map[string]*domain.User
+	byEmail    map[string]*domain.User
+	byID       map[string]*domain.User
+	byProvider map[string]*domain.User
 }
 
 func newFakeUserRepo() *fakeUserRepo {
 	return &fakeUserRepo{
-		byEmail: map[string]*domain.User{},
-		byID:    map[string]*domain.User{},
+		byEmail:    map[string]*domain.User{},
+		byID:       map[string]*domain.User{},
+		byProvider: map[string]*domain.User{},
 	}
 }
 
 func (f *fakeUserRepo) Create(u *domain.User) error {
 	f.byEmail[u.Email] = u
 	f.byID[u.ID] = u
+	if u.Provider != "" && u.ProviderID != "" {
+		f.byProvider[u.Provider+":"+u.ProviderID] = u
+	}
 	return nil
 }
 
@@ -36,6 +41,13 @@ func (f *fakeUserRepo) FindByEmail(email string) (*domain.User, error) {
 
 func (f *fakeUserRepo) FindByID(id string) (*domain.User, error) {
 	if u, ok := f.byID[id]; ok {
+		return u, nil
+	}
+	return nil, domain.ErrNotFound
+}
+
+func (f *fakeUserRepo) FindByProvider(provider, providerID string) (*domain.User, error) {
+	if u, ok := f.byProvider[provider+":"+providerID]; ok {
 		return u, nil
 	}
 	return nil, domain.ErrNotFound
