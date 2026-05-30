@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/joho/godotenv"
+
 	"flashcards/api/internal/auth"
 	"flashcards/api/internal/config"
 	"flashcards/api/internal/handler"
@@ -12,6 +14,8 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load()
+
 	i18n.Init()
 
 	cfg := config.Load()
