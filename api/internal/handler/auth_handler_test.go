@@ -17,20 +17,25 @@ import (
 // fakeUserRepo is an in-memory service.UserRepository for handler tests —
 // the same pattern as in service tests, scoped to this package.
 type fakeUserRepo struct {
-	byEmail map[string]*domain.User
-	byID    map[string]*domain.User
+	byEmail    map[string]*domain.User
+	byID       map[string]*domain.User
+	byProvider map[string]*domain.User
 }
 
 func newFakeUserRepo() *fakeUserRepo {
 	return &fakeUserRepo{
-		byEmail: map[string]*domain.User{},
-		byID:    map[string]*domain.User{},
+		byEmail:    map[string]*domain.User{},
+		byID:       map[string]*domain.User{},
+		byProvider: map[string]*domain.User{},
 	}
 }
 
 func (f *fakeUserRepo) Create(u *domain.User) error {
 	f.byEmail[u.Email] = u
 	f.byID[u.ID] = u
+	if u.Provider != "" && u.ProviderID != "" {
+		f.byProvider[u.Provider+":"+u.ProviderID] = u
+	}
 	return nil
 }
 
@@ -48,6 +53,13 @@ func (f *fakeUserRepo) FindByID(id string) (*domain.User, error) {
 	return nil, domain.ErrNotFound
 }
 
+func (f *fakeUserRepo) FindByProvider(provider, providerID string) (*domain.User, error) {
+	if u, ok := f.byProvider[provider+":"+providerID]; ok {
+		return u, nil
+	}
+	return nil, domain.ErrNotFound
+}
+
 func testRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
 	tokens := auth.NewTokenManager("test-secret")
@@ -57,7 +69,8 @@ func testRouter() *gin.Engine {
 	cardRepo := newFakeCardRepo()
 	cardSvc := service.NewCardService(cardRepo, deckRepo)
 	studySvc := service.NewStudyService(newFakeStudyProgressRepo(), cardRepo, deckRepo)
-	return Router(tokens, NewAuthHandler(authSvc), NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc), NewStudyHandler(studySvc))
+	oauthH := NewOAuthHandler(authSvc, "http://localhost:8080", "http://localhost:5175", "", "", "", "")
+	return Router(tokens, NewAuthHandler(authSvc), oauthH, NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc), NewStudyHandler(studySvc))
 }
 
 func decodeJSON(t *testing.T, w *httptest.ResponseRecorder, v any) {

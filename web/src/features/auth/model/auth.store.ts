@@ -45,10 +45,15 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  async function loginWithToken(value: string): Promise<void> {
+    applyToken(value)
+    user.value = await meRequest()
+  }
+
   function logout(): void {
     applyToken(null)
     user.value = null
   }
 
-  return { token, user, isAuthenticated, login, register, restore, logout }
+  return { token, user, isAuthenticated, login, register, restore, loginWithToken, logout }
 })

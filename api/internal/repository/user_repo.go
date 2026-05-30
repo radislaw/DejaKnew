@@ -44,3 +44,15 @@ func (r *UserRepo) FindByID(id string) (*domain.User, error) {
 	}
 	return &user, nil
 }
+
+func (r *UserRepo) FindByProvider(provider, providerID string) (*domain.User, error) {
+	var user domain.User
+	err := r.db.Where("provider = ? AND provider_id = ?", provider, providerID).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, domain.ErrNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
