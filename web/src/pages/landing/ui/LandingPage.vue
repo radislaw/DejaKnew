@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { FlipCard, LocaleSwitcher } from '@/shared/ui'
+import { API_BASE_URL } from '@/shared/config'
 
 const router = useRouter()
 const { t, tm, locale } = useI18n()
@@ -29,6 +30,8 @@ const memoCards = ref<MemoCard[]>([])
 const demoCardRef = ref<HTMLDivElement | null>(null)
 const cycleRef = ref<HTMLSpanElement | null>(null)
 const counterRef = ref<HTMLSpanElement | null>(null)
+
+const totalCards = ref(0)
 
 const demoFrontText = ref('serendipity')
 const demoIpaText = ref('/ˌsɛr.ənˈdɪp.ɪ.ti/')
@@ -109,7 +112,17 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/stats/public`)
+    if (res.ok) {
+      const data = await res.json()
+      totalCards.value = data.total_cards ?? 0
+    }
+  } catch {
+    // backend offline — counter stays 0, animation skips gracefully
+  }
+
   setDeckContent(DECK[0])
 
   demoTimer = setInterval(flip, 3200)
@@ -160,12 +173,13 @@ onMounted(() => {
   // Counter count-up animation
   const counterEl = counterRef.value
   if (counterEl) {
-    const target = 47823
     const fmt = (n: number) => n.toLocaleString('ru-RU').replace(/,/g, ' ')
     const countObs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (!e.isIntersecting) return
         countObs.unobserve(e.target)
+        const target = totalCards.value
+        if (target === 0) return
         const start = performance.now()
         const dur = 1600
         function tick(now: number) {
@@ -439,7 +453,7 @@ onUnmounted(() => {
 
       <!-- Footer CTA -->
       <section class="lp-cta">
-        <h2>{{ t('landing.ctaTitlePre') }}<span class="lp-counter" ref="counterRef">47&nbsp;823</span>{{ t('landing.ctaTitlePost') }}</h2>
+        <h2>{{ t('landing.ctaTitlePre') }}<span class="lp-counter" ref="counterRef">0</span>{{ t('landing.ctaTitlePost') }}</h2>
         <button class="lp-btn lp-btn-primary lp-btn-xl" @click="router.push('/register')">
           <span>{{ t('landing.createAccountCta') }}</span>
         </button>
@@ -475,7 +489,7 @@ onUnmounted(() => {
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'cv11', 'ss01';
   line-height: 1.5;
-  background: var(--bg);
+  background: radial-gradient(ellipse 100% 65% at 50% 38%, #1a1545 0%, #0e1a3a 40%, var(--bg) 70%);
   color: var(--fg);
   min-height: 100vh;
   overflow-x: hidden;

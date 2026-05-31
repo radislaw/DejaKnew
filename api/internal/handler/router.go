@@ -31,6 +31,8 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *O
 	api := r.Group("/api/v1")
 	api.Use(middleware.LocaleFromRequest())
 	{
+		api.GET("/stats/public", cardHandler.PublicStats)
+
 		api.POST("/auth/register", authHandler.Register)
 		api.POST("/auth/login", authHandler.Login)
 		api.GET("/auth/google", oauthHandler.GoogleRedirect)

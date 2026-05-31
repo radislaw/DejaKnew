@@ -49,3 +49,9 @@ func (r *CardRepo) Update(card *domain.Card) error {
 func (r *CardRepo) Delete(id string) error {
 	return r.db.Delete(&domain.Card{}, "id = ?", id).Error
 }
+
+func (r *CardRepo) CountAll() (int64, error) {
+	var n int64
+	err := r.db.Model(&domain.Card{}).Count(&n).Error
+	return n, err
+}
