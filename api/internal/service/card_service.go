@@ -13,6 +13,7 @@ type CardRepository interface {
 	FindByID(id string) (*domain.Card, error)
 	Update(card *domain.Card) error
 	Delete(id string) error
+	CountAll() (int64, error)
 }
 
 // deckOwnerChecker is the minimal deck dependency needed to verify ownership.
@@ -146,6 +147,10 @@ func (s *CardService) owned(ownerID, cardID string) (*domain.Card, error) {
 		return nil, domain.ErrForbidden
 	}
 	return card, nil
+}
+
+func (s *CardService) CountAll() (int64, error) {
+	return s.cards.CountAll()
 }
 
 // ExportDeck returns all cards in one deck after verifying ownership.

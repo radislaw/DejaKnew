@@ -22,6 +22,15 @@ func NewCardHandler(cards *service.CardService) *CardHandler {
 	return &CardHandler{cards: cards}
 }
 
+func (h *CardHandler) PublicStats(c *gin.Context) {
+	n, err := h.cards.CountAll()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to count cards"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"total_cards": n})
+}
+
 type cardBody struct {
 	Front     string   `json:"front" binding:"required"`
 	Back      string   `json:"back" binding:"required"`
