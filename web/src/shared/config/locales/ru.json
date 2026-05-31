@@ -118,6 +118,13 @@
     "welcomeSkip": "Пропустить настройку",
     "deckSkip": "Пропустить — настрою позже"
   },
+  "stats": {
+    "streak": "дней подряд",
+    "best": "рекорд",
+    "todayReviews": "сегодня",
+    "totalReviews": "повторений всего",
+    "cardsStudied": "карточек изучено"
+  },
   "landing": {
     "start": "Начать →",
     "getStarted": "Начать бесплатно",

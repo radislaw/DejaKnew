@@ -15,6 +15,7 @@ type StudyProgressRepository interface {
 	GetProgress(userID, cardID string) (*domain.StudyProgress, error)
 	UpsertProgress(sp *domain.StudyProgress) error
 	CreateReviewLog(entry *domain.ReviewLog) error
+	GetUserStats(userID string) (*domain.StudyStats, error)
 }
 
 type StudyService struct {
@@ -87,6 +88,11 @@ func (s *StudyService) SubmitReview(userID, cardID string, quality int) (*domain
 	}
 
 	return sp, nil
+}
+
+// GetStats returns study statistics and streak data for a user.
+func (s *StudyService) GetStats(userID string) (*domain.StudyStats, error) {
+	return s.progress.GetUserStats(userID)
 }
 
 // applyReview mutates sp in place using the SM2-like algorithm from the prototype.

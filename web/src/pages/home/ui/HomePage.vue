@@ -2,17 +2,23 @@
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useDeckStore } from '@/entities/deck'
+import { useStatsStore } from '@/entities/study-stats'
 import { DeckCreateForm } from '@/features/deck-create'
+import { StreakBadge } from '@/features/streak-display'
 import { DeckList } from '@/widgets/deck-list'
 import { CardExportButton } from '@/features/card-export'
 import { AppLayout } from '@/widgets/app-layout'
 
 const { t } = useI18n()
 const decks = useDeckStore()
+const statsStore = useStatsStore()
 const showForm = ref(false)
 const createError = ref<string | null>(null)
 
-onMounted(() => decks.fetchDecks())
+onMounted(() => {
+  decks.fetchDecks()
+  statsStore.fetchStudyStats()
+})
 
 async function onCreate(title: string, description: string) {
   createError.value = null
@@ -36,6 +42,8 @@ async function onDelete(id: string) {
 <template>
   <AppLayout>
     <main class="mx-auto max-w-4xl">
+      <StreakBadge v-if="statsStore.stats" :stats="statsStore.stats" class="mb-5" />
+
       <div class="mb-4 flex items-center justify-between">
         <h2 class="text-lg font-medium">{{ t('home.myDecks') }}</h2>
         <div class="flex gap-2">

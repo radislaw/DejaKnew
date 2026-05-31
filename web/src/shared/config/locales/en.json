@@ -118,6 +118,13 @@
     "welcomeSkip": "Skip setup",
     "deckSkip": "Skip — I’ll set up later"
   },
+  "stats": {
+    "streak": "day streak",
+    "best": "best",
+    "todayReviews": "today",
+    "totalReviews": "total reviews",
+    "cardsStudied": "cards studied"
+  },
   "landing": {
     "start": "Start →",
     "getStarted": "Get started — it's free",

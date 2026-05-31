@@ -16,7 +16,7 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *O
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:5175"},
+		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept-Language"},
 		ExposeHeaders:    []string{"Content-Length", "Content-Disposition"},
@@ -56,6 +56,7 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *O
 			protected.PATCH("/cards/:id", cardHandler.Update)
 			protected.DELETE("/cards/:id", cardHandler.Delete)
 
+			protected.GET("/stats", studyHandler.GetStats)
 			protected.GET("/study/:deckId/queue", studyHandler.GetQueue)
 			protected.POST("/study/:cardId/review", studyHandler.SubmitReview)
 		}

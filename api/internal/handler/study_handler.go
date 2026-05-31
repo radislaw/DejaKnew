@@ -27,6 +27,16 @@ func (h *StudyHandler) GetQueue(c *gin.Context) {
 	c.JSON(http.StatusOK, cards)
 }
 
+func (h *StudyHandler) GetStats(c *gin.Context) {
+	userID := c.GetString(middleware.ContextUserID)
+	stats, err := h.study.GetStats(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, stats)
+}
+
 type reviewBody struct {
 	Quality int `json:"quality" binding:"min=0,max=3"`
 }

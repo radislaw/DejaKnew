@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 80" width="360" height="80" role="img" aria-label="DéjàKnew">
+  
+  <rect width="360" height="80" fill="#070d1c"></rect>
+  <text x="20" y="52" class="wm dim">Déjà</text>
+  <text x="155" y="52" class="wm bright">Knew</text>
+  <rect x="290" y="44" width="8" height="8" class="dot" rx="1"></rect>
+</svg>
