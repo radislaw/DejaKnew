@@ -6,6 +6,7 @@ import { DeckPage } from '@/pages/deck'
 import { StudyPage } from '@/pages/study'
 import { OnboardingPage } from '@/pages/onboarding'
 import { AuthCallbackPage } from '@/pages/auth-callback'
+import { SettingsPage } from '@/pages/settings'
 import { useAuthStore } from '@/features/auth'
 
 declare module 'vue-router' {
@@ -24,6 +25,7 @@ export const router = createRouter({
     { path: '/register', name: 'register', component: RegisterPage },
     { path: '/onboarding', name: 'onboarding', component: OnboardingPage },
     { path: '/auth/callback', name: 'auth-callback', component: AuthCallbackPage },
+    { path: '/settings', name: 'settings', component: SettingsPage, meta: { requiresAuth: true } },
   ],
 })
 

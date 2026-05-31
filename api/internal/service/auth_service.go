@@ -17,6 +17,8 @@ type UserRepository interface {
 	FindByEmail(email string) (*domain.User, error)
 	FindByID(id string) (*domain.User, error)
 	FindByProvider(provider, providerID string) (*domain.User, error)
+	Update(user *domain.User) error
+	Delete(id string) error
 }
 
 type AuthService struct {
@@ -86,6 +88,61 @@ func (s *AuthService) Login(email, password string) (string, *domain.User, error
 // CurrentUser loads the user behind an authenticated request.
 func (s *AuthService) CurrentUser(id string) (*domain.User, error) {
 	return s.users.FindByID(id)
+}
+
+// UpdateProfile changes email and/or locale for a user.
+// Email uniqueness is enforced; OAuth users may not change their email.
+func (s *AuthService) UpdateProfile(id, email, locale string) (*domain.User, error) {
+	user, err := s.users.FindByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if locale != "ru" {
+		locale = "en"
+	}
+	user.Locale = locale
+
+	if email != "" && email != user.Email {
+		existing, err := s.users.FindByEmail(email)
+		if err != nil && !errors.Is(err, domain.ErrNotFound) {
+			return nil, err
+		}
+		if existing != nil {
+			return nil, domain.ErrUserExists
+		}
+		user.Email = email
+	}
+
+	if err := s.users.Update(user); err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+// ChangePassword verifies the current password and replaces it. Forbidden for OAuth users.
+func (s *AuthService) ChangePassword(id, current, newPass string) error {
+	user, err := s.users.FindByID(id)
+	if err != nil {
+		return err
+	}
+	if user.PasswordHash == "" {
+		return domain.ErrForbidden
+	}
+	if !auth.CheckPassword(user.PasswordHash, current) {
+		return domain.ErrInvalidCredentials
+	}
+	hash, err := auth.HashPassword(newPass)
+	if err != nil {
+		return err
+	}
+	user.PasswordHash = hash
+	return s.users.Update(user)
+}
+
+// DeleteAccount permanently removes the user record.
+func (s *AuthService) DeleteAccount(id string) error {
+	return s.users.Delete(id)
 }
 
 // LoginWithOAuth finds or creates a user from an OAuth provider and issues a JWT.

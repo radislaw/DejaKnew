@@ -12,12 +12,12 @@ import (
 )
 
 // Router wires all routes. New resource handlers are registered here.
-func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *OAuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler, studyHandler *StudyHandler) *gin.Engine {
+func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *OAuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler, studyHandler *StudyHandler, profileHandler *ProfileHandler) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"},
-		AllowMethods:     []string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept-Language"},
 		ExposeHeaders:    []string{"Content-Length", "Content-Disposition"},
 		AllowCredentials: false,
@@ -55,6 +55,10 @@ func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *O
 				protected.GET("/export", cardHandler.ExportAll)
 			protected.PATCH("/cards/:id", cardHandler.Update)
 			protected.DELETE("/cards/:id", cardHandler.Delete)
+
+			protected.PATCH("/profile", profileHandler.Update)
+			protected.PUT("/profile/password", profileHandler.ChangePassword)
+			protected.DELETE("/profile", profileHandler.Delete)
 
 			protected.GET("/stats", studyHandler.GetStats)
 			protected.GET("/study/:deckId/queue", studyHandler.GetQueue)

@@ -19,7 +19,10 @@ const auth = useAuthStore()
         DéjàKnew
       </button>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-slate-400">{{ auth.user?.email }}</span>
+        <button
+          class="text-sm text-slate-400 hover:text-slate-200 transition-colors"
+          @click="router.push({ name: 'settings' })"
+        >{{ auth.user?.email }}</button>
         <button
           class="rounded-lg px-3 py-1.5 text-sm text-slate-400 hover:text-slate-200"
           @click="auth.logout(); router.push('/login')"

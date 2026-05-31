@@ -118,6 +118,26 @@
     "welcomeSkip": "Skip setup",
     "deckSkip": "Skip — I’ll set up later"
   },
+  "settings": {
+    "title": "Settings",
+    "profile": "Profile",
+    "email": "Email",
+    "language": "Language",
+    "oauthProvider": "Signed in via {provider}",
+    "saveFailed": "Failed to save profile",
+    "saveSuccess": "Saved",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "passwordFailed": "Failed to change password",
+    "passwordSuccess": "Password updated",
+    "dangerZone": "Danger zone",
+    "deleteWarning": "This will permanently delete your account and all your data.",
+    "deleteAccount": "Delete account",
+    "deleteConfirm": "Are you sure? This cannot be undone.",
+    "deleteConfirmButton": "Yes, delete my account",
+    "deleteFailed": "Failed to delete account"
+  },
   "stats": {
     "streak": "day streak",
     "best": "best",

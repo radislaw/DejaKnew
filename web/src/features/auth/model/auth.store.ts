@@ -55,5 +55,9 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
   }
 
-  return { token, user, isAuthenticated, login, register, restore, loginWithToken, logout }
+  function updateUser(updated: User): void {
+    user.value = updated
+  }
+
+  return { token, user, isAuthenticated, login, register, restore, loginWithToken, logout, updateUser }
 })

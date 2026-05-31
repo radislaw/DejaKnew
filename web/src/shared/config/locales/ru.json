@@ -118,6 +118,26 @@
     "welcomeSkip": "Пропустить настройку",
     "deckSkip": "Пропустить — настрою позже"
   },
+  "settings": {
+    "title": "Настройки",
+    "profile": "Профиль",
+    "email": "Email",
+    "language": "Язык",
+    "oauthProvider": "Вход через {provider}",
+    "saveFailed": "Не удалось сохранить профиль",
+    "saveSuccess": "Сохранено",
+    "changePassword": "Изменить пароль",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "passwordFailed": "Не удалось изменить пароль",
+    "passwordSuccess": "Пароль обновлён",
+    "dangerZone": "Опасная зона",
+    "deleteWarning": "Аккаунт и все данные будут удалены безвозвратно.",
+    "deleteAccount": "Удалить аккаунт",
+    "deleteConfirm": "Вы уверены? Это действие нельзя отменить.",
+    "deleteConfirmButton": "Да, удалить мой аккаунт",
+    "deleteFailed": "Не удалось удалить аккаунт"
+  },
   "stats": {
     "streak": "дней подряд",
     "best": "рекорд",

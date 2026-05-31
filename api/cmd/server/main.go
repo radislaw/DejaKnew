@@ -34,6 +34,7 @@ func main() {
 	authService := service.NewAuthService(userRepo, tokens)
 	authHandler := handler.NewAuthHandler(authService)
 	oauthHandler := handler.NewOAuthHandler(authService, cfg.AppURL, cfg.FrontendURL, cfg.GoogleClientID, cfg.GoogleClientSecret, cfg.YandexClientID, cfg.YandexClientSecret)
+	profileHandler := handler.NewProfileHandler(authService)
 
 	deckRepo := repository.NewDeckRepo(db)
 	deckService := service.NewDeckService(deckRepo)
@@ -48,7 +49,7 @@ func main() {
 	studyService := service.NewStudyService(studyProgressRepo, cardRepo, deckRepo)
 	studyHandler := handler.NewStudyHandler(studyService)
 
-	r := handler.Router(tokens, authHandler, oauthHandler, deckHandler, cardHandler, studyHandler)
+	r := handler.Router(tokens, authHandler, oauthHandler, deckHandler, cardHandler, studyHandler, profileHandler)
 
 	addr := ":" + cfg.Port
 	log.Printf("listening on %s", addr)

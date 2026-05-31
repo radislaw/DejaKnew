@@ -56,3 +56,11 @@ func (r *UserRepo) FindByProvider(provider, providerID string) (*domain.User, er
 	}
 	return &user, nil
 }
+
+func (r *UserRepo) Update(user *domain.User) error {
+	return r.db.Save(user).Error
+}
+
+func (r *UserRepo) Delete(id string) error {
+	return r.db.Delete(&domain.User{}, "id = ?", id).Error
+}
