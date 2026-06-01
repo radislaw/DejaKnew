@@ -174,8 +174,115 @@
     "feature3Body": "Install as an app and study without internet — on a plane, metro, anywhere.",
     "ctaTitlePre": "Already ",
     "ctaTitlePost": " cards waiting for you.",
+    "ctaTitleAlt": "Start learning smarter today.",
     "footerPolicy": "Policy",
     "footerTerms": "Terms",
     "footerContact": "Contact"
+  },
+  "roadmap": {
+    "eyebrow": "product roadmap",
+    "title": "What we're",
+    "titleHighlight": "building next",
+    "subtitle": "A transparent look at where DéjàKnew has been and where we're taking it.",
+    "getStarted": "Get started →",
+    "statusDone": "Shipped",
+    "statusActive": "In Progress",
+    "statusPlanned": "Planned",
+    "statusVision": "Vision",
+    "phases": [
+      {
+        "label": "Phase 0",
+        "title": "Foundation",
+        "description": "Core learning loop, accounts, sync, and infrastructure for everything that follows.",
+        "features": [
+          "Email auth + Google + Yandex OAuth",
+          "Deck & card CRUD",
+          "SRS engine (SM-2 algorithm)",
+          "Streak & statistics tracking",
+          "CSV import & export",
+          "i18n — English & Russian",
+          "Onboarding flow",
+          "Profile & account settings",
+          "Images on card faces",
+          "Progress page with charts",
+          "PWA — install, offline study",
+          "Deck sharing by link (read-only)",
+          "Push notification infrastructure",
+          "WebSocket infrastructure",
+          "Bot protection & rate limiting",
+          "Payment gateway (Stripe + RevenueCat)"
+        ]
+      },
+      {
+        "label": "Phase 1",
+        "title": "Economy & Rewards",
+        "description": "Launch the engagement engine. Neurons currency, daily chests, achievements — all free.",
+        "features": [
+          "Neurons 🧠 currency (earned by learning)",
+          "Daily chests — Regular / Rare / Epic",
+          "Achievements (100 cards, perfect week…)",
+          "Character & skin shop",
+          "Rewarded ads (opt-in only)",
+          "Streak Freeze mechanic",
+          "Micro-feedback animations on correct answers",
+          "Activity heatmap calendar"
+        ]
+      },
+      {
+        "label": "Phase 2",
+        "title": "AI Generation & Subscription",
+        "description": "Primary recurring revenue. AI generates card sets from any topic — free tier + subscription.",
+        "features": [
+          "AI card generation by topic / keywords",
+          "Free tier: 5 per deck + 20 per month",
+          "Extra generations purchasable with Neurons",
+          "Subscription — unlimited AI + no ads",
+          "Card quality rating (👍 / 👎 feedback loop)"
+        ]
+      },
+      {
+        "label": "Phase 3",
+        "title": "Courses Platform + Focus Mode",
+        "description": "Interactive lessons with quizzes, code editors, and sandboxes. Focus Mode MVP for ADHD-friendly learning.",
+        "features": [
+          "Interactive lesson blocks (text, quiz, editor, preview)",
+          "Course-linked decks (auto-created on enroll)",
+          "AI assistant: generate cards from a lesson",
+          "Freemium access — first 5 lessons free",
+          "Focus Mode MVP: micro-sessions, reduced daily goals",
+          "Joke blocks with locale conditions (ru/en)"
+        ]
+      },
+      {
+        "label": "Phase 4",
+        "title": "Social & Silent Rooms",
+        "description": "Learn together without distraction. Reactions, co-study rooms, and friend pairs.",
+        "features": [
+          "Reactions on lesson blocks (aggregated, anonymous)",
+          "Silent Rooms — avatars + shared timer, no video",
+          "Friend system with invite links",
+          "Optional voice/video for friends",
+          "Content analytics for course creators"
+        ]
+      },
+      {
+        "label": "Phase 5 – 6",
+        "title": "Full Focus Mode & AI Tutor",
+        "description": "Endgame mechanics — full ADHD UI, AI companion, skill tree, and creator economy.",
+        "features": [
+          "Full Focus Mode UI overhaul",
+          "AI companion (body doubling, soft nudges)",
+          "AI tutor — adaptive challenges per user",
+          "Skill map: RPG-style competency tree",
+          "Character passive bonuses (e.g. +5% Neurons)",
+          "Creator Economy — publish & monetize courses"
+        ]
+      }
+    ],
+    "ctaLabel": "// join early",
+    "ctaTitle": "Shape the roadmap",
+    "ctaSubtitle": "Have a feature idea? We read every suggestion.",
+    "ctaButton": "Start learning free",
+    "footerHome": "Home"
   }
 }
