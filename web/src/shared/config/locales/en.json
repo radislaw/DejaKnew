@@ -193,24 +193,24 @@
       {
         "label": "Phase 0",
         "title": "Foundation",
-        "description": "Core learning loop, accounts, sync, and infrastructure for everything that follows.",
+        "description": "Core learning experience, accounts, and all the essentials.",
         "features": [
-          "Email auth + Google + Yandex OAuth",
-          "Deck & card CRUD",
-          "SRS engine (SM-2 algorithm)",
-          "Streak & statistics tracking",
+          "Sign up with Email, Google, or Yandex",
+          "Create, edit & organize decks and cards",
+          "Smart spaced repetition",
+          "Streaks & study statistics",
           "CSV import & export",
-          "i18n — English & Russian",
+          "English & Russian interface",
           "Onboarding flow",
           "Profile & account settings",
           "Images on card faces",
           "Progress page with charts",
-          "PWA — install, offline study",
-          "Deck sharing by link (read-only)",
-          "Push notification infrastructure",
-          "WebSocket infrastructure",
-          "Bot protection & rate limiting",
-          "Payment gateway (Stripe + RevenueCat)"
+          "Install as app, study offline",
+          "Share decks with a link",
+          "Push notifications",
+          "Real-time sync",
+          "Security & abuse protection",
+          "Subscription payments"
         ]
       },
       {
@@ -223,9 +223,9 @@
           "Achievements (100 cards, perfect week…)",
           "Character & skin shop",
           "Rewarded ads (opt-in only)",
-          "Streak Freeze mechanic",
-          "Micro-feedback animations on correct answers",
-          "Activity heatmap calendar"
+          "Streak Freeze — skip a day without losing your streak",
+          "Satisfying animations on correct answers",
+          "Activity calendar"
         ]
       },
       {
@@ -233,24 +233,24 @@
         "title": "AI Generation & Subscription",
         "description": "Primary recurring revenue. AI generates card sets from any topic — free tier + subscription.",
         "features": [
-          "AI card generation by topic / keywords",
+          "Generate cards by topic with AI",
           "Free tier: 5 per deck + 20 per month",
           "Extra generations purchasable with Neurons",
           "Subscription — unlimited AI + no ads",
-          "Card quality rating (👍 / 👎 feedback loop)"
+          "Card quality rating 👍 / 👎"
         ]
       },
       {
         "label": "Phase 3",
         "title": "Courses Platform + Focus Mode",
-        "description": "Interactive lessons with quizzes, code editors, and sandboxes. Focus Mode MVP for ADHD-friendly learning.",
+        "description": "Structured lessons with quizzes and hands-on practice. Focus Mode for ADHD-friendly learning.",
         "features": [
-          "Interactive lesson blocks (text, quiz, editor, preview)",
-          "Course-linked decks (auto-created on enroll)",
+          "Lessons with text, quizzes & interactive practice",
+          "Auto-generated flashcard decks for each course",
           "AI assistant: generate cards from a lesson",
           "Freemium access — first 5 lessons free",
-          "Focus Mode MVP: micro-sessions, reduced daily goals",
-          "Joke blocks with locale conditions (ru/en)"
+          "Focus Mode: short sessions & flexible daily goals",
+          "Fun moments in lessons"
         ]
       },
       {
@@ -258,11 +258,11 @@
         "title": "Social & Silent Rooms",
         "description": "Learn together without distraction. Reactions, co-study rooms, and friend pairs.",
         "features": [
-          "Reactions on lesson blocks (aggregated, anonymous)",
+          "Anonymous reactions on lessons",
           "Silent Rooms — avatars + shared timer, no video",
           "Friend system with invite links",
           "Optional voice/video for friends",
-          "Content analytics for course creators"
+          "Analytics for course creators"
         ]
       },
       {
@@ -270,12 +270,12 @@
         "title": "Full Focus Mode & AI Tutor",
         "description": "Endgame mechanics — full ADHD UI, AI companion, skill tree, and creator economy.",
         "features": [
-          "Full Focus Mode UI overhaul",
-          "AI companion (body doubling, soft nudges)",
-          "AI tutor — adaptive challenges per user",
-          "Skill map: RPG-style competency tree",
+          "Full Focus Mode redesign",
+          "AI study companion — stay focused together",
+          "AI tutor — personalized challenges",
+          "RPG-style skill tree",
           "Character passive bonuses (e.g. +5% Neurons)",
-          "Creator Economy — publish & monetize courses"
+          "Publish & monetize your courses"
         ]
       }
     ],
@@ -284,5 +284,100 @@
     "ctaSubtitle": "Have a feature idea? We read every suggestion.",
     "ctaButton": "Start learning free",
     "footerHome": "Home"
+  },
+  "roadmapDev": {
+    "eyebrow": "technical roadmap",
+    "title": "Developer",
+    "titleAccent": "Roadmap",
+    "subtitle": "Full technical scope — implementation details, infrastructure, and architecture notes.",
+    "devBadge": "dev view",
+    "userView": "← User view",
+    "footerCopy": "© 2026 DéjàKnew — dev roadmap",
+    "footerHome": "Home",
+    "footerUserRoadmap": "User roadmap",
+    "phases": [
+      {
+        "label": "Phase 0",
+        "title": "Foundation",
+        "features": [
+          "Email auth + Google + Yandex OAuth",
+          "Deck & card CRUD",
+          "SRS engine (SM-2 algorithm)",
+          "Streak & statistics tracking",
+          "CSV import & export",
+          "i18n — English & Russian (vue-i18n)",
+          "Onboarding flow",
+          "Profile & account settings",
+          "Images on card faces (S3/MinIO)",
+          "Progress page with charts",
+          "PWA — install, offline study (Workbox)",
+          "Deck sharing by link (read-only)",
+          "Push notification infrastructure (Web Push)",
+          "WebSocket infrastructure (Gin + gorilla/websocket)",
+          "Bot protection & rate limiting (Gin middleware)",
+          "Payment gateway (Stripe + RevenueCat)"
+        ]
+      },
+      {
+        "label": "Phase 1",
+        "title": "Economy & Rewards",
+        "features": [
+          "Neurons 🧠 virtual currency ledger (Postgres)",
+          "Daily chest drop system — Regular / Rare / Epic",
+          "Achievements engine (100 cards, perfect week…)",
+          "Character & skin shop (asset catalog)",
+          "Rewarded ads integration (AdMob / opt-in only)",
+          "Streak Freeze mechanic (consume Neurons)",
+          "Lottie micro-feedback animations on correct answers",
+          "Activity heatmap calendar (contribution graph)"
+        ]
+      },
+      {
+        "label": "Phase 2",
+        "title": "AI Generation & Subscription",
+        "features": [
+          "AI card generation via LLM (topic / keywords prompt)",
+          "Free tier: 5 per deck + 20 per month (rate-limited)",
+          "Extra generations purchasable with Neurons",
+          "Subscription — unlimited AI + no ads (RevenueCat entitlements)",
+          "Card quality rating (👍 / 👎 RLHF feedback loop)"
+        ]
+      },
+      {
+        "label": "Phase 3",
+        "title": "Courses Platform + Focus Mode",
+        "features": [
+          "Interactive lesson blocks (text, quiz, code editor, sandbox preview)",
+          "Course-linked decks (auto-created on enroll via webhook)",
+          "AI assistant: generate cards from lesson content",
+          "Freemium access — first 5 lessons free per course",
+          "Focus Mode MVP: micro-sessions, reduced daily goals (ADHD-friendly)",
+          "Joke blocks with locale conditions (ru/en)"
+        ]
+      },
+      {
+        "label": "Phase 4",
+        "title": "Social & Silent Rooms",
+        "features": [
+          "Reactions on lesson blocks (aggregated, anonymous — no PII stored)",
+          "Silent Rooms via WebRTC (avatars + shared Pomodoro timer, no video by default)",
+          "Friend system with invite links (short-lived JWT tokens)",
+          "Optional voice/video for friends (WebRTC mesh)",
+          "Content analytics for course creators (impressions, completion rate)"
+        ]
+      },
+      {
+        "label": "Phase 5 – 6",
+        "title": "Full Focus Mode & AI Tutor",
+        "features": [
+          "Full Focus Mode UI overhaul (reduced-distraction layout)",
+          "AI companion — body doubling simulation, soft nudge notifications",
+          "AI tutor — adaptive challenge generation per user mastery model",
+          "Skill map: RPG-style competency tree (DAG with unlock conditions)",
+          "Character passive bonuses (e.g. +5% Neurons multiplier)",
+          "Creator Economy — publish & monetize courses (revenue share)"
+        ]
+      }
+    ]
   }
 }

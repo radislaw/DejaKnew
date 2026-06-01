@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import LocaleSwitcher from '@/shared/ui/LocaleSwitcher.vue'
 
 const router = useRouter()
 const { t, tm } = useI18n()
@@ -93,9 +94,12 @@ onUnmounted(() => cleanups.forEach(fn => fn()))
           <span class="rm-logo-mark">D</span>
           <span>DéjàKnew</span>
         </a>
-        <button class="rm-btn rm-btn-ghost" @click="router.push('/register')">
-          {{ t('roadmap.getStarted') }}
-        </button>
+        <div class="rm-nav-right">
+          <LocaleSwitcher />
+          <button class="rm-btn rm-btn-ghost" @click="router.push('/register')">
+            {{ t('roadmap.getStarted') }}
+          </button>
+        </div>
       </nav>
 
       <!-- Header -->
@@ -306,6 +310,7 @@ onUnmounted(() => cleanups.forEach(fn => fn()))
   transition: background .15s ease, border-color .15s ease, color .15s ease;
   white-space: nowrap;
 }
+.rm-nav-right { display: flex; align-items: center; gap: 8px; }
 .rm-btn-ghost { color: var(--fg-dim); }
 .rm-btn-ghost:hover { color: var(--fg); background: var(--card); }
 .rm-btn-primary {

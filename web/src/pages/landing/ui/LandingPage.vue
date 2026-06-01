@@ -158,18 +158,6 @@ onMounted(async () => {
   buildMemo()
   startCycleWord()
 
-  // Forgetting curve draw on scroll into view
-  const curveEl = document.querySelector<SVGElement>('.lp-curve')
-  if (curveEl) {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { curveEl.classList.add('is-in'); obs.unobserve(curveEl) }
-      })
-    }, { threshold: 0.4 })
-    obs.observe(curveEl)
-    cleanups.push(() => obs.disconnect())
-  }
-
   // Counter count-up animation
   const counterEl = counterRef.value
   if (counterEl) {
@@ -427,13 +415,6 @@ onUnmounted(() => {
         </div>
         <div class="lp-features">
           <article class="lp-card">
-            <svg class="lp-curve" viewBox="0 0 240 36" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M 4 8 Q 30 24 56 30 L 56 12 Q 90 22 124 28 L 124 10 Q 160 18 196 24 L 196 8 Q 218 14 236 18" />
-              <circle cx="4"   cy="8"  r="2.5" />
-              <circle cx="56"  cy="12" r="2.5" />
-              <circle cx="124" cy="10" r="2.5" />
-              <circle cx="196" cy="8"  r="2.5" />
-            </svg>
             <div class="lp-card-icon">🧠</div>
             <h3 class="lp-card-title">{{ t('landing.feature1Title') }}</h3>
             <p class="lp-card-body">{{ t('landing.feature1Body') }}</p>
@@ -453,7 +434,8 @@ onUnmounted(() => {
 
       <!-- Footer CTA -->
       <section class="lp-cta">
-        <h2>{{ t('landing.ctaTitlePre') }}<span class="lp-counter" ref="counterRef">0</span>{{ t('landing.ctaTitlePost') }}</h2>
+        <h2 v-if="totalCards >= 10">{{ t('landing.ctaTitlePre') }}<span class="lp-counter" ref="counterRef">0</span>{{ t('landing.ctaTitlePost') }}</h2>
+        <h2 v-else>{{ t('landing.ctaTitleAlt') }}</h2>
         <button class="lp-btn lp-btn-primary lp-btn-xl" @click="router.push('/register')">
           <span>{{ t('landing.createAccountCta') }}</span>
         </button>
@@ -828,25 +810,6 @@ onUnmounted(() => {
 .lp-card-title { font-size: 16px; font-weight: 600; color: var(--fg); margin: 0 0 8px; letter-spacing: -.01em; }
 .lp-card-body  { font-size: 14px; line-height: 1.6; color: var(--fg-dim); margin: 0; }
 
-/* ── Forgetting curve sparkline ──────────────────── */
-.lp-curve {
-  display: block; width: 100%; height: 36px; margin-bottom: 22px; overflow: visible;
-}
-.lp-curve path {
-  fill: none; stroke: var(--sky-hover); stroke-width: 1.5; stroke-linecap: round;
-  stroke-dasharray: 200; stroke-dashoffset: 200;
-}
-.lp-curve circle {
-  fill: var(--bg); stroke: var(--sky-hover); stroke-width: 1.5; opacity: 0;
-}
-.lp-curve.is-in path { animation: draw 1.6s ease forwards; }
-.lp-curve.is-in circle { animation: pop .3s ease forwards; }
-.lp-curve.is-in circle:nth-of-type(1) { animation-delay: .2s; }
-.lp-curve.is-in circle:nth-of-type(2) { animation-delay: .7s; }
-.lp-curve.is-in circle:nth-of-type(3) { animation-delay: 1.1s; }
-.lp-curve.is-in circle:nth-of-type(4) { animation-delay: 1.4s; }
-@keyframes draw { to { stroke-dashoffset: 0; } }
-@keyframes pop  { to { opacity: 1; } }
 
 /* ── Footer CTA ──────────────────────────────────── */
 .lp-cta { text-align: center; padding: 120px 0; }

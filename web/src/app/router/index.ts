@@ -7,7 +7,7 @@ import { StudyPage } from '@/pages/study'
 import { OnboardingPage } from '@/pages/onboarding'
 import { AuthCallbackPage } from '@/pages/auth-callback'
 import { SettingsPage } from '@/pages/settings'
-import { RoadmapPage } from '@/pages/roadmap'
+import { RoadmapPage, RoadmapDevPage } from '@/pages/roadmap'
 import { useAuthStore } from '@/features/auth'
 
 declare module 'vue-router' {
@@ -28,6 +28,7 @@ export const router = createRouter({
     { path: '/auth/callback', name: 'auth-callback', component: AuthCallbackPage },
     { path: '/settings', name: 'settings', component: SettingsPage, meta: { requiresAuth: true } },
     { path: '/roadmap', name: 'roadmap', component: RoadmapPage },
+    { path: '/roadmap/dev', name: 'roadmap-dev', component: RoadmapDevPage },
   ],
 })
 
