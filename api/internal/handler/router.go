@@ -12,11 +12,11 @@ import (
 )
 
 // Router wires all routes. New resource handlers are registered here.
-func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *OAuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler, studyHandler *StudyHandler, profileHandler *ProfileHandler) *gin.Engine {
+func Router(tokens *auth.TokenManager, authHandler *AuthHandler, oauthHandler *OAuthHandler, deckHandler *DeckHandler, cardHandler *CardHandler, studyHandler *StudyHandler, profileHandler *ProfileHandler, allowedOrigins []string) *gin.Engine {
 	r := gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:5176"},
+		AllowOrigins:     allowedOrigins,
 		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization", "Accept-Language"},
 		ExposeHeaders:    []string{"Content-Length", "Content-Disposition"},

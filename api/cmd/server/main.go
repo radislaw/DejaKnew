@@ -49,7 +49,7 @@ func main() {
 	studyService := service.NewStudyService(studyProgressRepo, cardRepo, deckRepo)
 	studyHandler := handler.NewStudyHandler(studyService)
 
-	r := handler.Router(tokens, authHandler, oauthHandler, deckHandler, cardHandler, studyHandler, profileHandler)
+	r := handler.Router(tokens, authHandler, oauthHandler, deckHandler, cardHandler, studyHandler, profileHandler, cfg.AllowedOrigins)
 
 	addr := ":" + cfg.Port
 	log.Printf("listening on %s", addr)

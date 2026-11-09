@@ -1,6 +1,9 @@
 package config
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 // Config holds runtime settings, sourced exclusively from env vars.
 type Config struct {
@@ -9,6 +12,7 @@ type Config struct {
 	JWTSecret          string
 	AppURL             string
 	FrontendURL        string
+	AllowedOrigins     []string
 	GoogleClientID     string
 	GoogleClientSecret string
 	YandexClientID     string
@@ -22,6 +26,7 @@ func Load() Config {
 		JWTSecret:          env("JWT_SECRET", "dev-secret-change-me"),
 		AppURL:             env("APP_URL", "http://localhost:8080"),
 		FrontendURL:        env("FRONTEND_URL", "http://localhost:5175"),
+		AllowedOrigins:     splitList(env("ALLOWED_ORIGINS", "http://localhost:5173,http://localhost:5174,http://localhost:5175,http://localhost:5176")),
 		GoogleClientID:     env("GOOGLE_CLIENT_ID", ""),
 		GoogleClientSecret: env("GOOGLE_CLIENT_SECRET", ""),
 		YandexClientID:     env("YANDEX_CLIENT_ID", ""),
@@ -34,4 +39,16 @@ func env(key, fallback string) string {
 		return v
 	}
 	return fallback
+}
+
+// splitList parses a comma-separated env value, trimming blanks and trailing slashes.
+func splitList(v string) []string {
+	var out []string
+	for _, part := range strings.Split(v, ",") {
+		part = strings.TrimRight(strings.TrimSpace(part), "/")
+		if part != "" {
+			out = append(out, part)
+		}
+	}
+	return out
 }

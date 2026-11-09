@@ -70,7 +70,7 @@ func testRouter() *gin.Engine {
 	cardSvc := service.NewCardService(cardRepo, deckRepo)
 	studySvc := service.NewStudyService(newFakeStudyProgressRepo(), cardRepo, deckRepo)
 	oauthH := NewOAuthHandler(authSvc, "http://localhost:8080", "http://localhost:5175", "", "", "", "")
-	return Router(tokens, NewAuthHandler(authSvc), oauthH, NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc), NewStudyHandler(studySvc))
+	return Router(tokens, NewAuthHandler(authSvc), oauthH, NewDeckHandler(deckSvc, cardSvc), NewCardHandler(cardSvc), NewStudyHandler(studySvc), NewProfileHandler(authSvc), []string{"http://localhost:5173"})
 }
 
 func decodeJSON(t *testing.T, w *httptest.ResponseRecorder, v any) {

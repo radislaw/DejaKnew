@@ -202,6 +202,11 @@ Middleware читает `Authorization: Bearer <token>`, кладёт user в к
 отложен до деплоя. Фронт-SPA — статика на любой CDN; api — контейнер;
 БД — managed либо self-hosted.
 
+Демо-деплой: Render (`render.yaml`) — api как Docker Web Service
+(`api/Dockerfile`), фронт как Static Site с SPA-rewrite, БД внешняя
+(Neon). Настройки через env: `DATABASE_URL`, `JWT_SECRET`, `APP_URL`,
+`FRONTEND_URL`, `ALLOWED_ORIGINS` (CORS), `VITE_API_URL` (при сборке фронта).
+
 ## Что НЕ делаем в архитектуре v1 (YAGNI)
 
 - Нет очередей, кэша (Redis), воркеров — не нужны

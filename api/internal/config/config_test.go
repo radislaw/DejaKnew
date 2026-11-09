@@ -18,3 +18,11 @@ func TestLoadFromEnv(t *testing.T) {
 		t.Fatalf("expected port 9999, got %q", got)
 	}
 }
+
+func TestLoadAllowedOrigins(t *testing.T) {
+	t.Setenv("ALLOWED_ORIGINS", " https://a.example.com/ , https://b.example.com,, ")
+	got := Load().AllowedOrigins
+	if len(got) != 2 || got[0] != "https://a.example.com" || got[1] != "https://b.example.com" {
+		t.Fatalf("unexpected origins: %v", got)
+	}
+}

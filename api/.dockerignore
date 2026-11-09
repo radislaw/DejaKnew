@@ -1,0 +1,4 @@
+.env
+tmp/
+server
+*_test.go
